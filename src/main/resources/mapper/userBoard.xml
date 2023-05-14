@@ -10,7 +10,6 @@
 		<result column="user_id" property="userId"/>
 		<result column="subject" property="subject"/>
 		<result column="content" property="content"/>
-		<result column="photo_url" property="photoUrl"/>
 		<result column="hit" property="hit"/>
 		<result column="register_time" property="registerTime"/>
 	</resultMap>
@@ -25,8 +24,8 @@
 	
 	<!-- 게시글 등록 -->
 	<insert id="writeArticle" parameterType="userboardDto">
-		insert into boards(user_id, subject, content, photo_url)
-		values (#{userId}, #{subject}, #{content}, #{photoUrl})
+		insert into boards(user_id, subject, content)
+		values (#{userId}, #{subject}, #{content})
 	</insert>
 			
 	<!-- 게시글 상세보기 -->
@@ -46,7 +45,7 @@
 	<!-- 게시글 수정 -->
 	<update id="modifyArticle" parameterType="userboardDto">
 		update boards
-		set subject = #{subject}, content = #{content}, photo_url = #{photoUrl}
+		set subject = #{subject}, content = #{content}
 		where article_no = #{articleNo}
 	</update>
 	

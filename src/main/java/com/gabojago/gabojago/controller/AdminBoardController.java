@@ -53,7 +53,7 @@ public class AdminBoardController {
 	// 공지사항 작성
 	@ApiOperation(value = "공지사항 글작성", notes = "새로운 공지사항 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping("/write")
-	public ResponseEntity<String> write(AdminBoardDto adminDto, Model model, HttpSession session){
+	public ResponseEntity<String> write(@RequestBody AdminBoardDto adminDto){
 		logger.debug("HotPlaceBoardDto info : {}", adminDto);
 //		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
 //		adminDto.setUserId(memberDto.getUserId());

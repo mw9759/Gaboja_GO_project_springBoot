@@ -9,7 +9,7 @@ import com.gabojago.gabojago.model.dto.UserBoardDto;
 @Mapper
 public interface UserBoardMapper {
 
-	void writeArticle(UserBoardDto userboardDto) throws SQLException;
+	boolean writeArticle(UserBoardDto userboardDto) throws SQLException;
 
 	List<UserBoardDto> listArticle() throws SQLException;
 
@@ -17,8 +17,8 @@ public interface UserBoardMapper {
 
 	void updateHit(int articleNo)throws SQLException;
 
-	void modifyArticle(UserBoardDto boardDto)throws SQLException;
+	boolean modifyArticle(UserBoardDto boardDto)throws SQLException;
 
-	void deleteArticle(int articleNo)throws SQLException;
+	boolean deleteArticle(int articleNo)throws SQLException;
 	
 }

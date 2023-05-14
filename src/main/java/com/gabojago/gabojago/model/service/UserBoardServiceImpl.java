@@ -18,8 +18,8 @@ public class UserBoardServiceImpl implements UserBoardService{
 	}
 	
 	@Override
-	public void writeArticle(UserBoardDto userboardDto) throws SQLException {
-		userBoardMapper.writeArticle(userboardDto);
+	public boolean writeArticle(UserBoardDto userboardDto) throws SQLException {
+		return userBoardMapper.writeArticle(userboardDto);
 	}
 
 	@Override
@@ -28,8 +28,8 @@ public class UserBoardServiceImpl implements UserBoardService{
 	}
 
 	@Override
-	public void modifyArticle(UserBoardDto boardDto) throws SQLException {
-		userBoardMapper.modifyArticle(boardDto);
+	public boolean modifyArticle(UserBoardDto boardDto) throws SQLException {
+		return userBoardMapper.modifyArticle(boardDto);
 	}
 
 	@Override
@@ -43,8 +43,8 @@ public class UserBoardServiceImpl implements UserBoardService{
 	}
 
 	@Override
-	public void deleteArticle(int articleNo) throws SQLException {
-		userBoardMapper.deleteArticle(articleNo);
+	public boolean deleteArticle(int articleNo) throws SQLException {
+		return userBoardMapper.deleteArticle(articleNo);
 	}
 
 

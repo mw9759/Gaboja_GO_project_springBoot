@@ -8,119 +8,126 @@ import javax.websocket.Session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.gabojago.gabojago.model.dto.UserBoardDto;
+import com.gabojago.gabojago.model.dto.AdminBoardDto;
 import com.gabojago.gabojago.model.dto.MemberDto;
 import com.gabojago.gabojago.model.service.UserBoardService;
 
-@Controller
+import io.swagger.annotations.ApiOperation;
+
+@RestController
 @RequestMapping("/hotpl")
 public class UserBoardController {
 	
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
-	
+	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+	@Autowired
 	private UserBoardService userBoardService;
 	
-	public UserBoardController(UserBoardService userBoardService) {
-		super();
-		this.userBoardService = userBoardService;
-	}
 	
-	//작성 핫플리스트 가져오기
+	//작성 게시글 가져오기
+	@ApiOperation(value = "게시글 글목록", notes = "모든 게시글의 정보를 반환한다.", response = List.class)
 	@GetMapping("/list")
-	public String list(Model model) {
+	public ResponseEntity<?> list() { 
 		try {
-			List<UserBoardDto> list = userBoardService.listArticle();
-			model.addAttribute("articles", list);
-			return "hotplboard/hotplList";
+			return new ResponseEntity<List<UserBoardDto>>(userBoardService.listArticle(), HttpStatus.OK);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return exceptionHandling(e);
 		}
-		return "hotplboard/hotplList";
 	}
 	
-	//핫플 게시글 작성페이지 이동
-	@GetMapping("/write")
-	public String mvwrite() {
-		return "hotplboard/writehotpl";
-	}
+	// 게시글 작성페이지 이동
+//	@GetMapping("/write")
+//	public String mvwrite() {
+//		return "hotplboard/writehotpl";
+//	}
 	
-	//핫플 게시글 작성
+	//게시글 작성
+	@ApiOperation(value = "게시글 작성", notes = "새로운 게시글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping("/write")
-	public String write(UserBoardDto hotplDto, Model model) {
+	public ResponseEntity<?> write(@RequestBody UserBoardDto hotplDto) {
 		logger.debug("HotPlaceBoardDto info : {}", hotplDto);
 		try {
-			userBoardService.writeArticle(hotplDto);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return list(model);
-	}
-	
-	//핫플 게시글 상세보기
-	@GetMapping("/view/{articleNo}")
-	public String view(@PathVariable("articleNo") int articleNo, Model model,
-						HttpSession session) {
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-		if (memberDto != null) {
-			try {
-				userBoardService.updateHit(articleNo);
-				UserBoardDto boardDto = userBoardService.getArticle(articleNo);
-				model.addAttribute("article", boardDto);
-
-				return "hotplboard/viewHotpl";
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "index";
+			if(userBoardService.writeArticle(hotplDto)) {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
-		} else {
-			model.addAttribute("msg", "로그인 후 이용해주세요");
-			return "user/login_signup";
-		}
-	}
-	
-	//핫플 게시글 수정페이지 이동
-	@GetMapping("/modify/{articleNo}")
-	public String mvmodify(@PathVariable("articleNo") int articleNo, Model model) {
-		try {
-			UserBoardDto boardDto = userBoardService.getArticle(articleNo);
-			model.addAttribute("article", boardDto);
-			return "hotplboard/modifyHotpl";
+			else
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return "index";
+			return exceptionHandling(e);
 		}
 	}
 	
-	//핫플 게시글 수정
+	//게시글 상세보기
+	@ApiOperation(value = "게시글 상세보기", notes = "글번호에 해당하는 게시글의 정보를 반환한다.", response = UserBoardDto.class)
+	@GetMapping("/view/{articleNo}")
+	public ResponseEntity<?> view(@PathVariable("articleNo") int articleNo) {
+		try {
+			userBoardService.updateHit(articleNo);
+			return new ResponseEntity<UserBoardDto>(userBoardService.getArticle(articleNo), HttpStatus.OK);
+		} catch (SQLException e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	//게시글 수정페이지 이동
+//	@GetMapping("/modify/{articleNo}")
+//	public String mvmodify(@PathVariable("articleNo") int articleNo, Model model) {
+//		try {
+//			UserBoardDto boardDto = userBoardService.getArticle(articleNo);
+//			model.addAttribute("article", boardDto);
+//			return "hotplboard/modifyHotpl";
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			return "index";
+//		}
+//	}
+	
+	//게시글 수정
+	@ApiOperation(value = "게시글수정", notes = "수정할 게시글 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping("/modify")
-	public String modify(UserBoardDto hotplDto, Model model, HttpSession session) {
+	public ResponseEntity<?> modify(@RequestBody UserBoardDto hotplDto) {
 		logger.debug("HotPlaceBoardDto info : {}", hotplDto);
 		try {
-			userBoardService.modifyArticle(hotplDto);;
+			if(userBoardService.modifyArticle(hotplDto)) {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return exceptionHandling(e);
 		}
-		return view(hotplDto.getArticleNo(), model, session);
 	}
 	
 	//게시글 삭제
+	@ApiOperation(value = "게시글 삭제", notes = "게시글에 해당하는 게시글 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@GetMapping("/delete/{articleNo}")
-	public String delete(@PathVariable("articleNo") int articleNo,Model model) {
+	public ResponseEntity<?> delete(@PathVariable("articleNo") int articleNo,Model model) {
 		try {
-			userBoardService.deleteArticle(articleNo);
-			model.addAttribute("msg", "게시글이 삭제되었습니다.");
-			return list(model);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			model.addAttribute("msg", "삭제실패");
+			if(userBoardService.deleteArticle(articleNo)) {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
 		}
-		return null;
+	}
+	
+	//에러처리
+	private ResponseEntity<String> exceptionHandling(Exception e) {
+		e.printStackTrace();
+		return new ResponseEntity<String>("Sorry: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
