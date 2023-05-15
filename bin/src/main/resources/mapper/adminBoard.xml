@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gabojago.gabojago.model.mapper.AdminBoardMapper">
+	
+	<!-- 게시글 목록 담을 resultMap -->
+	<resultMap type="AdminBoardDto" id="list">
+		<result column="article_no" property="articleNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="subject" property="subject"/>
+		<result column="content" property="content"/>
+		<result column="hit" property="hit"/>
+		<result column="register_time" property="registerTime"/>
+	</resultMap>
+	
+	<!-- 모든 게시글 리스트 가져오기 -->
+	<select id="listArticle" resultMap="list">
+		select *
+		from boards
+		where type = 'A'
+		order by article_no desc
+	</select>
+	
+	<!-- 게시글 작성 -->
+	<insert id="writeArticle" parameterType="adminboardDto">
+		insert into boards(user_id, subject, content, type)
+		values (#{userId}, #{subject}, #{content}, 'A')
+	</insert>
+	
+	<!-- 게시글 상세보기 -->
+	<select id="getArticle" parameterType="int" resultMap="list">
+		select *
+		from boards
+		where article_no = #{articleNo}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHit" parameterType="int">
+		update boards
+		set hit = hit + 1
+		where article_no = #{articleNo}
+	</update>
+	
+	<!-- 공지사항 수정 -->
+	<update id="modifyArticle" parameterType="adminboardDto">
+		update boards
+		set subject = #{subject}, content = #{content}
+		where article_no = #{articleNo}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deleteArticle" parameterType="int">
+		delete from boards
+		where article_no = #{articleNo}
+	</delete>
+</mapper>

@@ -8,13 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,9 +20,11 @@ import com.gabojago.gabojago.model.dto.TripSearchDto;
 import com.gabojago.gabojago.model.service.TripSearchService;
 import com.gabojago.gabojago.util.ParameterCheck;
 
-@Controller
+import io.swagger.annotations.ApiOperation;
+
+@RestController
 @RequestMapping("/tripsearch")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE })
 public class TripSearchController {
 
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
@@ -36,17 +36,12 @@ public class TripSearchController {
 		this.tripSearchService = tripSearchService;
 	}
 	
-	@GetMapping("/list")
-	public String mvList(@RequestParam Map<String, String> map) throws Exception {
-		return "redirect:/assets/tripsearch/list.html";
-	}
-	
 	@ResponseBody
 	@PostMapping("/list")
+	@ApiOperation(value = "test", response = List.class)
 	public ResponseEntity<?> list(@RequestBody Map<String, String> map) throws Exception {
 		logger.debug("list map : {}", map);
 		
-		// 파라미터 입력받기
 		int sido = ParameterCheck.notNumberToZero(map.get("searchArea"));
 		int contentTypeId = ParameterCheck.notNumberToOne(map.get("searchContentId"));
 		String keyword = ParameterCheck.nullToBlank(map.get("searchKeyword"));
