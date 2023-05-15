@@ -28,7 +28,7 @@ import com.gabojago.gabojago.model.service.UserBoardService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/hotpl")
+@RequestMapping("/userboard")
 public class UserBoardController {
 	
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
@@ -58,10 +58,10 @@ public class UserBoardController {
 	//게시글 작성
 	@ApiOperation(value = "게시글 작성", notes = "새로운 게시글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping("/write")
-	public ResponseEntity<?> write(@RequestBody UserBoardDto hotplDto) {
-		logger.debug("HotPlaceBoardDto info : {}", hotplDto);
+	public ResponseEntity<?> write(@RequestBody UserBoardDto userBoardDto) {
+		logger.debug("HotPlaceBoardDto info : {}", userBoardDto);
 		try {
-			if(userBoardService.writeArticle(hotplDto)) {
+			if(userBoardService.writeArticle(userBoardDto)) {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 			else

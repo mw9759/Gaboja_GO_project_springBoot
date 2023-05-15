@@ -63,7 +63,6 @@ public class MemberController{
 						HttpSession session, HttpServletResponse response,
 						HttpServletRequest request) {
 		logger.debug("login map : {}", map);
-		System.out.println(map);
 		// 입력 아이디가 있다면 해당 계정의 salt값 가져오기.
 		String userPwd = "";
 		try {
@@ -92,8 +91,10 @@ public class MemberController{
 			}
 			response.addCookie(cookie);
 			if(memberDto != null) {
+				System.out.println("login success");
 				return new ResponseEntity<MemberDto>(memberDto, HttpStatus.OK);
 			}
+			System.out.println("login fail");
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			
 		} catch (Exception e) {
@@ -125,7 +126,7 @@ public class MemberController{
 	//회원가입
 	@PostMapping("/join")
 	@ApiOperation(value = "회원가입.", response = String.class)
-	public ResponseEntity<?> join(@RequestParam Map<String, String> map) {
+	public ResponseEntity<?> join(@RequestBody Map<String, String> map) {
 		MemberDto memberDto = new MemberDto();
 		System.out.println(map);
 		try {
