@@ -3,10 +3,10 @@ package com.gabojago.gabojago.controller;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -25,14 +25,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabojago.gabojago.model.dto.UserBoardDto;
 import com.gabojago.gabojago.model.dto.MemberDto;
+import com.gabojago.gabojago.model.service.JwtServiceImpl;
 import com.gabojago.gabojago.model.service.MemberService;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 
 @RestController
@@ -48,7 +49,8 @@ public class MemberController{
 	@Autowired
 	private MemberService memberService;
 
-	
+	@Autowired
+	private JwtServiceImpl jwtService;
     // 로그인 페이지 이동.
 //	@GetMapping("/login")
 //	public String mvlogin() {
@@ -57,12 +59,11 @@ public class MemberController{
 	
 	// 로그인
 	@PostMapping("/login")
-	@ApiOperation(value = "{id}에 해당하는 사용자 정보를 반환한다.", response = MemberDto.class)
+	@ApiOperation(value = "{id}에 해당하는 사용자 정보를 반환한다.", response = Map.class)
 	public ResponseEntity<?> login(
 						@RequestBody Map<String, String> map,
 						HttpSession session, HttpServletResponse response,
 						HttpServletRequest request) {
-		logger.debug("login map : {}", map);
 		// 입력 아이디가 있다면 해당 계정의 salt값 가져오기.
 		String userPwd = "";
 		try {
@@ -75,40 +76,110 @@ public class MemberController{
 			return exceptionHandling(e);
 		}
 		
+		// 토큰 생성 준비
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		
 		// 입력 계정이 있는지 확인.
 		try {
 			MemberDto memberDto = memberService.loginMember(map);
-			
-			//세션에 유저 정보 저장.
-			session.setAttribute("userinfo", memberDto);
-			// 쿠키에 아이디 정보 저장.=> 로그인시 아이디 저장.
-			Cookie cookie = new Cookie("userid", map.get("userid"));
-			cookie.setPath(request.getContextPath());
-			if("ok".equals(map.get("saveid"))) {
-				cookie.setMaxAge(60*60*24*365*40);
-			} else {
-				cookie.setMaxAge(0);
-			}
-			response.addCookie(cookie);
 			if(memberDto != null) {
 				System.out.println("login success");
-				return new ResponseEntity<MemberDto>(memberDto, HttpStatus.OK);
+				String accessToken = jwtService.createAccessToken("userid", map.get("userid"));// key, data
+				String refreshToken = jwtService.createRefreshToken("userid", map.get("userid"));// key, data
+				memberService.saveRefreshToken(map.get("userid"), refreshToken);
+				logger.debug("로그인 accessToken 정보 : {}", accessToken);
+				logger.debug("로그인 refreshToken 정보 : {}", refreshToken);
+				resultMap.put("access-token", accessToken);
+				resultMap.put("refresh-token", refreshToken);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
+//				return new ResponseEntity<MemberDto>(memberDto, HttpStatus.OK);
+			}else {
+				resultMap.put("message", FAIL);
+				status = HttpStatus.ACCEPTED;
+				System.out.println("login fail");
 			}
-			System.out.println("login fail");
-			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Map<String, Object>>(resultMap, status);
 			
 		} catch (Exception e) {
+			logger.error("로그인 실패 : {}", e);
 			e.printStackTrace();
 			return exceptionHandling(e);
 		}
 	}
 	
+	// access토큰 유효성 검사
+	@ApiOperation(value = "회원인증", notes = "회원 정보를 담은 Token을 반환한다.", response = Map.class)
+	@GetMapping("/info/{userid}")
+	public ResponseEntity<Map<String, Object>> getInfo(
+			@PathVariable("userid") @ApiParam(value = "인증할 회원의 아이디.", required = true) String userid,
+			HttpServletRequest request) {
+//		logger.debug("userid : {} ", userid);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		if (jwtService.checkToken(request.getHeader("access-token"))) {
+			logger.info("사용 가능한 토큰!!!");
+			try {
+//				로그인 사용자 정보.
+				MemberDto memberDto = memberService.showMyInfo(userid);
+				resultMap.put("userInfo", memberDto);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
+			} catch (Exception e) {
+				logger.error("정보조회 실패 : {}", e);
+				resultMap.put("message", e.getMessage());
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+		} else {
+			logger.error("사용 불가능 토큰!!!");
+			resultMap.put("message", FAIL);
+			status = HttpStatus.UNAUTHORIZED;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
 	// 로그아웃.
-//	@GetMapping("/logout")
-//	public String logout(HttpSession session) {
-//		session.invalidate();
-//		return "redirect:/";
-//	}
+//	@ApiOperation(value = "로그아웃", notes = "회원 정보를 담은 Token을 제거한다.", response = Map.class)
+	@GetMapping("/logout/{userid}")
+	public ResponseEntity<?> removeToken(@PathVariable("userid") String userid) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.deleRefreshToken(userid);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("로그아웃 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+
+	}
+	//토큰 재발급
+	@ApiOperation(value = "Access Token 재발급", notes = "만료된 access token을 재발급받는다.", response = Map.class)
+	@PostMapping("/refresh")
+	public ResponseEntity<?> refreshToken(@RequestBody MemberDto memberDto, HttpServletRequest request)
+			throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		String token = request.getHeader("refresh-token");
+		logger.debug("token : {}, memberDto : {}", token, memberDto);
+		if (jwtService.checkToken(token)) {
+			if (token.equals(memberService.getRefreshToken(memberDto.getUserId()))) {
+				String accessToken = jwtService.createAccessToken("userid", memberDto.getUserId());
+				logger.debug("token : {}", accessToken);
+				logger.debug("정상적으로 액세스토큰 재발급!!!");
+				resultMap.put("access-token", accessToken);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
+			}
+		} else {
+			logger.debug("리프레쉬토큰도 사용불!!!!!!!");
+			status = HttpStatus.UNAUTHORIZED;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
 	
 	//아이디 중복확인
 	@GetMapping("/{userid}")
@@ -135,11 +206,7 @@ public class MemberController{
 			memberDto.setUserId(map.get("userid"));
 			memberDto.setEmailId(map.get("emailid"));
 			memberDto.setEmailDomain(map.get("emaildomain"));
-			
-			// 전화번호 dto에 담기.
-			String fnum = map.get("fnum");
-			String bnum = map.get("bnum");
-			memberDto.setUserPhonNum("010"+fnum+bnum);
+			memberDto.setUserPhonNum(map.get("fullNum"));
 			
 			// 비밀번호 암호화----------------------------------------
 			String SALT = getSALT(); // 개인 SALT생성
@@ -239,7 +306,7 @@ public class MemberController{
 	}
 	
 	//마이페이지 : 내가 쓴 글 출력
-	@GetMapping("/mywrites")
+	@GetMapping("/mypage/mywrites")
 	@ApiOperation(value = "내 가 쓴 글 가져오기", response = List.class)
 	public ResponseEntity<?> getMyWrites(HttpSession session){
 		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
@@ -251,7 +318,7 @@ public class MemberController{
 	}
 	
 	//비밀번호 확인
-	@PostMapping(value = "/checkpwd")
+	@PostMapping(value = "/mypage/checkpwd")
 	@ApiOperation(value = "비밀번호 확인", response = Integer.class)
 	public ResponseEntity<?> checkPwd(@RequestBody Map<String, String> map) {
 		logger.debug("idCheck userid : {}", map);
@@ -277,7 +344,7 @@ public class MemberController{
 	}
 	
 	//회원탈퇴
-	@DeleteMapping("/delete/{userId}")
+	@DeleteMapping("/mypage/delete/{userId}")
 	@ApiOperation(value = "{id} 에 해당하는 사용자 정보를 삭제한다.", response = String.class)
 	public ResponseEntity<?> delete(@PathVariable("userId") String userId,
 							HttpSession session) {
@@ -292,7 +359,7 @@ public class MemberController{
 	}
 	
 	//개인정보 변경
-	@PutMapping(value = "/modifyMyInfo")
+	@PutMapping(value = "/mypage/modifyMyInfo")
 	@ApiOperation(value = "사용자 정보를 수정한다.", response = String.class)
 	public ResponseEntity<?> modifyMyInfo(@RequestBody Map<String, String> map) {
 		// 비밀번호 암호화----------------------------------------

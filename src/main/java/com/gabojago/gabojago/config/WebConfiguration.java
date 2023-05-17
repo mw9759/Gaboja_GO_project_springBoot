@@ -1,11 +1,15 @@
 package com.gabojago.gabojago.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.gabojago.gabojago.interceptor.JwtInterceptor;
 
 @Configuration
 @EnableWebMvc
@@ -37,4 +41,15 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 	
+	// 인터셉터 선언
+//	@Autowired
+//    private JwtInterceptor jwtInterceptor;
+//    
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(jwtInterceptor)
+//        		.addPathPatterns("/user/mypage/**")
+//        		.excludePathPatterns("/user/**")
+//                .addPathPatterns("/**");
+//    }
 }

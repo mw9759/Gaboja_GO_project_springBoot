@@ -61,6 +61,10 @@ public class SwaggerConfiguration {
 
 	}
 	@Bean
+	public Docket sequrityJWTApi() {
+		return getDocket("JWT", Predicates.or(PathSelectors.regex("/sequrity.*")));
+	}
+	@Bean
 	public Docket allApi() {
 		return getDocket("전체", Predicates.or(PathSelectors.regex("/*.*")));
 	}
@@ -71,7 +75,7 @@ public class SwaggerConfiguration {
 //		responseMessages.add(new ResponseMessageBuilder().code(500).message("서버 문제 발생 !!!").responseModel(new ModelRef("Error")).build());
 //		responseMessages.add(new ResponseMessageBuilder().code(404).message("페이지를 찾을 수 없습니다 !!!").build());
 		return new Docket(DocumentationType.SWAGGER_2).groupName(groupName).apiInfo(apiInfo()).select()
-				.apis(RequestHandlerSelectors.basePackage("com.gabojago.gabojago.controller")).paths(predicate)
+				.apis(RequestHandlerSelectors.basePackage("com.gabojago.gabojago")).paths(predicate)
 				.apis(RequestHandlerSelectors.any()).build();
 //				.useDefaultResponseMessages(false)
 //				.globalResponseMessage(RequestMethod.GET,responseMessages);
