@@ -15,11 +15,20 @@
 	</resultMap>
 	
 	<!-- 모든 게시글 리스트 가져오기 -->
-	<select id="listArticle" resultMap="list">
-		select *
-		from boards
-		where type = 'A'
-		order by article_no desc
+	<select id="listArticle" parameterType="map" resultMap="list">
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name
+		from boards b, members m
+		where b.user_id = m.user_id and b.type = 'A'
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				and subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				and b.${key} = #{word}
+			</if>
+		</if>
+		order by b.article_no desc
+		limit #{start}, #{spp}
 	</select>
 	
 	<!-- 게시글 작성 -->
@@ -54,4 +63,20 @@
 		delete from boards
 		where article_no = #{articleNo}
 	</delete>
+	
+	<!-- 게시글 개수 -->
+	<select id="getTotalAdminBoardCount" parameterType="map" resultType="int">
+		select count(article_no)
+		from boards
+		<where>
+			<if test="word != null and word != ''">
+				<if test="key == 'subject'">
+					and subject like concat('%', #{word}, '%')
+				</if>
+				<if test="key != 'subject'">
+					and ${key} = #{word}
+				</if>
+			</if>
+		</where>
+	</select>
 </mapper>

@@ -34,7 +34,6 @@ import com.gabojago.gabojago.model.service.MemberService;
 
 import io.swagger.annotations.ApiOperation;
 
-
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
