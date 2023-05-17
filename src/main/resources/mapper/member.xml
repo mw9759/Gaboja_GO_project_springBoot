@@ -112,4 +112,25 @@
 		where user_id = #{userid} and type = "U"
 		order by article_no desc
 	</select>
+	
+	<!-- 리프레시토큰저장 -->
+	<update id="saveRefreshToken" parameterType="map">
+		update members
+		set token = #{token}
+		where user_id = #{userid}
+	</update>
+	
+	<!-- 리프레시토큰가져오기 -->
+	<select id="getRefreshToken" parameterType="string" resultType="string">
+		select token
+		from members
+		where user_id = #{userid}
+	</select>
+	
+	<!-- 리프레시토큰삭제 -->
+	<update id="deleteRefreshToken" parameterType="map">
+		update members
+		set token = #{token, jdbcType=VARCHAR}
+		where user_id = #{userid}
+	</update>
 </mapper>

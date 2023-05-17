@@ -23,4 +23,7 @@ public interface MemberService {
 	String findSalt(String userId) throws SQLException;
 	void modifyPwd(Map<String, String> map) throws SQLException;
 	int checkPwd(Map<String, String> map) throws SQLException;
+	void saveRefreshToken(String string, String refreshToken)throws SQLException;
+	public Object getRefreshToken(String userid) throws Exception;
+	public void deleRefreshToken(String userid) throws Exception;
 }
