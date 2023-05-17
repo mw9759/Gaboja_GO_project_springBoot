@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.gabojago.gabojago.model.dto.AdminBoardDto;
 import com.gabojago.gabojago.model.dto.BoardParameterDto;
-import com.gabojago.gabojago.util.PageNavigation;
 
 public interface AdminBoardService {
 
