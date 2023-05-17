@@ -62,7 +62,8 @@ public class AdminBoardController {
 		}
 	}
 	
-	@ApiOperation(value = "게시판 총개수", notes = "게시판의 총 개수를 반환한다..", response = Integer.class)
+	// 페이징 처리
+	@ApiOperation(value = "게시판 총개수", notes = "게시판의 총 개수를 반환한다.", response = Integer.class)
 	@GetMapping("/total")
 	public ResponseEntity<Integer> getNum(@RequestParam Map<String,String> map) throws Exception {
 		logger.info("getNum 호출");
