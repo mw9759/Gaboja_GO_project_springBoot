@@ -12,7 +12,7 @@ public interface QnABoardMapper {
 
 	boolean writeArticle(QnAboardDto boardDto) throws SQLException;
 	List<QnAboardDto> listArticle(BoardParameterDto boardParameterDto) throws SQLException;
-	int getTotalAdminBoardCount(Map<String, Object> map) throws SQLException;
+	int getTotalQnaBoardCount(Map<String, Object> map) throws SQLException;
 	QnAboardDto getArticle(int articleNo) throws SQLException;
 	boolean modifyArticle(QnAboardDto boardDto) throws SQLException;
 	boolean deleteArticle(int articleNO) throws SQLException;

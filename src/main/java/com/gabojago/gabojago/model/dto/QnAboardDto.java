@@ -6,14 +6,14 @@ public class QnAboardDto {
 	private String userId;
 	private String subject;
 	private String content;
-	private int isAnswer;
+	private String isAnswer;
 	private String registerTime;
 
-	public int getIsAnswer() {
+	public String getIsAnswer() {
 		return isAnswer;
 	}
 
-	public void setIsAnswer(int isAnswer) {
+	public void setIsAnswer(String isAnswer) {
 		this.isAnswer = isAnswer;
 	}
 

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.gabojago.gabojago.model.mapper.AdminBoardMapper">
+<mapper namespace="com.gabojago.gabojago.model.mapper.QnABoardMapper">
 	
 	<!-- 게시글 목록 담을 resultMap -->
 	<resultMap type="QnAboardDto" id="list">
@@ -11,13 +11,13 @@
 		<result column="subject" property="subject"/>
 		<result column="content" property="content"/>
 		<result column="register_time" property="registerTime"/>
-		<result column="isanswer" property=isAnswer/>
+		<result column="isanswer" property="isAnswer"/>
 	</resultMap>
 	
 	<!-- 모든 게시글 리스트 가져오기 -->
 	<select id="listArticle" parameterType="map" resultMap="list">
 		select b.article_no, b.user_id, b.subject, b.content, b.isanswer, b.register_time, m.user_name
-		from qna b, members m
+		from qnA b, members m
 		where b.user_id = m.user_id
 		<if test="word != null and word != ''">
 			<if test="key == 'subject'">
@@ -65,7 +65,7 @@
 	</delete>
 	
 	<!-- 게시글 개수 -->
-	<select id="getTotalAdminBoardCount" parameterType="map" resultType="int">
+	<select id="getTotalQnaBoardCount" parameterType="map" resultType="int">
 		select count(article_no)
 		from qna
 		<where>

@@ -87,7 +87,7 @@ public class QnaBoardServiceImpl implements QnaBoardService {
 			key = "user_id";
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
-		int totalCount = qnaboardMapper.getTotalAdminBoardCount(param);
+		int totalCount = qnaboardMapper.getTotalQnaBoardCount(param);
 		
 		return totalCount;
 	}
