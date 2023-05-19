@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gabojago.gabojago.model.mapper.TravelPlanMapper">
+	<select id="planList" parameterType="String" resultType="String">
+		select plan_name
+		from plan
+		where user_id = #{userId}
+	</select>
+	
+	<insert id="createPlan" parameterType="map">
+		insert into plan(user_id, plan_name)
+		values(#{userId}, #{planName})
+	</insert>
+</mapper>

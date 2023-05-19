@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gabojago.gabojago.model.mapper.QnABoardMapper">
+	
+	<!-- 게시글 목록 담을 resultMap -->
+	<resultMap type="QnAboardDto" id="list">
+		<result column="article_no" property="articleNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="subject" property="subject"/>
+		<result column="content" property="content"/>
+		<result column="register_time" property="registerTime"/>
+		<result column="isanswer" property="isAnswer"/>
+	</resultMap>
+	
+	<!-- 모든 게시글 리스트 가져오기 -->
+	<select id="listArticle" parameterType="map" resultMap="list">
+		select b.article_no, b.user_id, b.subject, b.content, b.isanswer, b.register_time, m.user_name
+		from qnA b, members m
+		where b.user_id = m.user_id
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				and subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				and b.${key} = #{word}
+			</if>
+		</if>
+		order by b.article_no desc
+		limit #{start}, #{spp}
+	</select>
+	
+	<!-- 게시글 작성 -->
+	<insert id="writeArticle" parameterType="qnAboardDto">
+		insert into qna(user_id, subject, content)
+		values (#{userId}, #{subject}, #{content})
+	</insert>
+	
+	<!-- 게시글 상세보기 -->
+	<select id="getArticle" parameterType="int" resultMap="list">
+		select *
+		from qna
+		where article_no = #{articleNo}
+	</select>
+	
+	<!-- 답변 달림 체크 -->
+	<update id="answerOk" parameterType="int">
+		update qna
+		set isanswer = 'Y'
+		where article_no = #{articleNo}
+	</update>
+	
+	<!-- qna 수정 -->
+	<update id="modifyArticle" parameterType="qnAboardDto">
+		update qna
+		set subject = #{subject}, content = #{content}
+		where article_no = #{articleNo}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deleteArticle" parameterType="int">
+		delete from qna
+		where article_no = #{articleNo}
+	</delete>
+	
+	<!-- 게시글 개수 -->
+	<select id="getTotalQnaBoardCount" parameterType="map" resultType="int">
+		select count(article_no)
+		from qna
+		<where>
+			<if test="word != null and word != ''">
+				<if test="key == 'subject'">
+					and subject like concat('%', #{word}, '%')
+				</if>
+				<if test="key != 'subject'">
+					and ${key} = #{word}
+				</if>
+			</if>
+		</where>
+	</select>
+</mapper>
