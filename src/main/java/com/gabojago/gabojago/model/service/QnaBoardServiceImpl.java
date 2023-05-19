@@ -26,12 +26,22 @@ public class QnaBoardServiceImpl implements QnaBoardService {
 	public boolean writeArticle(QnAboardDto boardDto) throws Exception {
 		return qnaboardMapper.writeArticle(boardDto);
 	}
-
+	@Override
+	public boolean writeArticler() throws Exception {
+		return qnaboardMapper.writeArticler();
+	}
 	@Override
 	public List<QnAboardDto> listArticle(BoardParameterDto boardParameterDto) throws Exception {
 		int start = boardParameterDto.getPg() == 0 ? 0 : (boardParameterDto.getPg() - 1) * boardParameterDto.getSpp();
 		boardParameterDto.setStart(start);
 		return qnaboardMapper.listArticle(boardParameterDto);
+	}
+	
+	@Override
+	public List<QnAboardDto> listArticler(BoardParameterDto boardParameterDto) throws Exception {
+		int start = boardParameterDto.getPg() == 0 ? 0 : (boardParameterDto.getPg() - 1) * boardParameterDto.getSpp();
+		boardParameterDto.setStart(start);
+		return qnaboardMapper.listArticler(boardParameterDto);
 	}
 	
 //	@Override
@@ -73,12 +83,21 @@ public class QnaBoardServiceImpl implements QnaBoardService {
 	public boolean modifyArticle(QnAboardDto boardDto) throws Exception {
 		return qnaboardMapper.modifyArticle(boardDto);
 	}
+	
+	@Override
+	public boolean modifyArticler(QnAboardDto boardDto) throws Exception {
+		return qnaboardMapper.modifyArticler(boardDto);
+	}
+	
 
 	@Override
 	public boolean deleteArticle(int articleNo) throws Exception {
 		return qnaboardMapper.deleteArticle(articleNo);
 	}
-	
+	@Override
+	public boolean deleteArticler(int articleNo) throws Exception {
+		return qnaboardMapper.deleteArticler(articleNo);
+	}
 	@Override
 	public int getNum(Map<String, String> map) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -96,5 +115,13 @@ public class QnaBoardServiceImpl implements QnaBoardService {
 	public boolean answerOk(int articleNo) throws SQLException {
 		return qnaboardMapper.answerOk(articleNo);
 	}
-
+	
+	@Override
+	public boolean updateIsAnswered(int articleNo) throws Exception {
+		return qnaboardMapper.updateIsAnswered(articleNo);
+	}
+	@Override
+	public boolean updateNoAnswered(int articleNo) throws Exception {
+		return qnaboardMapper.updateNoAnswered(articleNo);
+	}
 }

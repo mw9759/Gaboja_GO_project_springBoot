@@ -17,5 +17,11 @@ public interface QnaBoardService {
 	boolean modifyArticle(QnAboardDto boardDto) throws Exception;
 	boolean deleteArticle(int articleNo) throws Exception;
 	int getNum(Map<String,String> map) throws Exception;
-	
+	//qnarstult
+	List<QnAboardDto> listArticler(BoardParameterDto boardParameterDto) throws Exception;
+	boolean writeArticler() throws Exception;
+	boolean deleteArticler(int articleNo) throws Exception;
+	boolean modifyArticler(QnAboardDto boardDto) throws Exception;
+	boolean updateIsAnswered(int articleNo) throws Exception;
+	boolean updateNoAnswered(int articleNo) throws Exception;
 }

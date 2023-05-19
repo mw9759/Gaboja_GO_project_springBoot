@@ -17,4 +17,11 @@ public interface QnABoardMapper {
 	boolean modifyArticle(QnAboardDto boardDto) throws SQLException;
 	boolean deleteArticle(int articleNO) throws SQLException;
 	boolean answerOk(int articleNo) throws SQLException;
+	//qnaresult
+	List<QnAboardDto> listArticler(BoardParameterDto boardParameterDto);
+	boolean writeArticler() throws SQLException;
+	boolean deleteArticler(int articleNO) throws SQLException;
+	boolean modifyArticler(QnAboardDto boardDto) throws SQLException;
+	boolean updateIsAnswered(int articleNo) throws Exception;
+	boolean updateNoAnswered(int articleNo) throws Exception;
 }
