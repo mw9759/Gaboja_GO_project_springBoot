@@ -31,10 +31,37 @@
 		limit #{start}, #{spp}
 	</select>
 	
+	<!-- qnaresult 리스트 가죠오기 -->
+	<select id="listArticler" parameterType="map" resultMap="list">
+		select b.article_no, b.user_id, b.subject, b.content, b.isanswer, b.register_time, m.user_name
+		from qnaResult b, members m
+		where b.user_id = m.user_id
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				and subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				and b.${key} = #{word}
+			</if>
+		</if>
+		order by b.article_no desc
+		limit #{start}, #{spp}
+	</select>
 	<!-- 게시글 작성 -->
 	<insert id="writeArticle" parameterType="qnAboardDto">
 		insert into qna(user_id, subject, content)
 		values (#{userId}, #{subject}, #{content})
+	</insert>
+	
+	<!-- qnaresult 작성 -->
+	<insert id="writeArticler">
+		INSERT INTO qnaResult (article_no, user_id)
+		VALUES (
+		  (SELECT article_no
+		  FROM qna
+		  ORDER BY register_time DESC
+		  LIMIT 1), "admin"
+		);
 	</insert>
 	
 	<!-- 게시글 상세보기 -->
@@ -58,12 +85,36 @@
 		where article_no = #{articleNo}
 	</update>
 	
+	<!-- qnaresult 수정 -->
+	<update id="modifyArticler" parameterType="qnAboardDto">
+		update qnaResult
+		set subject = #{subject}, content = #{content}, register_time = now()
+		where article_no = #{articleNo}
+	</update>
+	
 	<!-- 게시글 삭제 -->
 	<delete id="deleteArticle" parameterType="int">
 		delete from qna
 		where article_no = #{articleNo}
 	</delete>
 	
+	<delete id="deleteArticler" parameterType="int">
+		delete from qnaResult
+		where article_no = #{articleNo}
+	</delete>
+	
+	<!-- qna updateIsAnswered -->
+	<update id="updateIsAnswered" parameterType="int">
+		update qna
+		set isanswer = "Y"
+		where article_no = #{articleNo}
+	</update>
+	<!-- qna updateNoAnswered -->
+	<update id="updateNoAnswered" parameterType="int">
+		update qna
+		set isanswer = "N"
+		where article_no = #{articleNo}
+	</update>
 	<!-- 게시글 개수 -->
 	<select id="getTotalQnaBoardCount" parameterType="map" resultType="int">
 		select count(article_no)
