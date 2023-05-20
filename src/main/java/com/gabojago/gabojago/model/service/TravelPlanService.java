@@ -8,5 +8,6 @@ public interface TravelPlanService {
 	
 	List<String> planList(String userId) throws Exception;
 	void createPlan(TravelPlanDto travelPlanDto) throws Exception;
+	void removePlan(TravelPlanDto travelPlanDto) throws Exception;
 	
 }

@@ -31,4 +31,12 @@ public class TravelPlanServiceImpl implements TravelPlanService {
 		map.put("planName", travelPlanDto.getPlanName());
 		travelPlanMapper.createPlan(map);
 	}
+
+	@Override
+	public void removePlan(TravelPlanDto travelPlanDto) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", travelPlanDto.getUserId());
+		map.put("planName", travelPlanDto.getPlanName());
+		travelPlanMapper.removePlan(map);
+	}
 }

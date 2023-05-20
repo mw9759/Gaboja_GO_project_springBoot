@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,9 +48,23 @@ public class TravelPlanController {
 		try {
 			travelPlanService.createPlan(travelPlanDto);
 		} catch(Exception e) {
+			return ResponseEntity.ok(false);
+		}
+		
+		return ResponseEntity.ok(true);
+	}
+	
+	@ResponseBody
+	@DeleteMapping("/remove")
+	@ApiOperation(value = "test", response = List.class)
+	public ResponseEntity<Boolean> removePlan(@RequestBody TravelPlanDto travelPlanDto) throws Exception {
+		try {
+			travelPlanService.removePlan(travelPlanDto);
+		} catch(Exception e) {
 			return ResponseEntity.ok(true);
 		}
 		
 		return ResponseEntity.ok(true);
 	}
+	
 }

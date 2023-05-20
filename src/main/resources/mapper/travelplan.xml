@@ -13,4 +13,10 @@
 		insert into plan(user_id, plan_name)
 		values(#{userId}, #{planName})
 	</insert>
+	
+	<delete id="removePlan" parameterType="map">
+		delete from plan
+		where user_id = #{userId}
+		and plan_name = #{planName}
+	</delete>
 </mapper>
