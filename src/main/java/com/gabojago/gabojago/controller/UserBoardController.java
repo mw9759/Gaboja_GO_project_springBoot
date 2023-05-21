@@ -2,6 +2,7 @@ package com.gabojago.gabojago.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
@@ -14,18 +15,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gabojago.gabojago.model.dto.UserBoardDto;
 import com.gabojago.gabojago.model.dto.AdminBoardDto;
+import com.gabojago.gabojago.model.dto.BoardParameterDto;
 import com.gabojago.gabojago.model.dto.MemberDto;
 import com.gabojago.gabojago.model.service.UserBoardService;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/userboard")
@@ -41,19 +47,21 @@ public class UserBoardController {
 	//작성 게시글 가져오기
 	@ApiOperation(value = "게시글 글목록", notes = "모든 게시글의 정보를 반환한다.", response = List.class)
 	@GetMapping("/list")
-	public ResponseEntity<?> list() { 
+	public ResponseEntity<?> list(@ApiParam(value = "게시글을 얻기위한 부가정보.", required = true) @ModelAttribute BoardParameterDto boardParameterDto) { 
 		try {
-			return new ResponseEntity<List<UserBoardDto>>(userBoardService.listArticle(), HttpStatus.OK);
+			return new ResponseEntity<List<UserBoardDto>>(userBoardService.listArticle(boardParameterDto), HttpStatus.OK);
 		} catch (SQLException e) {
 			return exceptionHandling(e);
 		}
 	}
 	
-	// 게시글 작성페이지 이동
-//	@GetMapping("/write")
-//	public String mvwrite() {
-//		return "hotplboard/writehotpl";
-//	}
+	// 페이징 처리
+		@ApiOperation(value = "게시판 총개수", notes = "게시판의 총 개수를 반환한다.", response = Integer.class)
+		@GetMapping("/total")
+		public ResponseEntity<Integer> getNum(@RequestParam Map<String,String> map) throws Exception {
+			logger.info("getNum 호출");
+			return new ResponseEntity<Integer>(userBoardService.getNum(map), HttpStatus.OK);
+		}
 	
 	//게시글 작성
 	@ApiOperation(value = "게시글 작성", notes = "새로운 게시글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
@@ -69,6 +77,15 @@ public class UserBoardController {
 		} catch (SQLException e) {
 			return exceptionHandling(e);
 		}
+	}
+	
+	//게시글에 올라온 이미지 등록
+	@ApiOperation(value = "이미지 등록", response = String.class)
+	@PostMapping("/upload")
+	public void getImg(@RequestBody Map<String, List<String>> map){
+		List<String> imgs = map.get("imgBlobs");
+		System.out.println(map);
+        System.out.println(imgs);
 	}
 	
 	//게시글 상세보기

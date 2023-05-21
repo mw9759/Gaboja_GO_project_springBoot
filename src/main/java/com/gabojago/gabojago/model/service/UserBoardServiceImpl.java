@@ -1,9 +1,12 @@
 package com.gabojago.gabojago.model.service;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.gabojago.gabojago.model.dto.BoardParameterDto;
 import com.gabojago.gabojago.model.dto.UserBoardDto;
 import com.gabojago.gabojago.model.mapper.UserBoardMapper;
 
@@ -33,8 +36,10 @@ public class UserBoardServiceImpl implements UserBoardService{
 	}
 
 	@Override
-	public List<UserBoardDto> listArticle() throws SQLException {
-		return userBoardMapper.listArticle();
+	public List<UserBoardDto> listArticle(BoardParameterDto boardParameterDto) throws SQLException {
+		int start = boardParameterDto.getPg() == 0 ? 0 : (boardParameterDto.getPg() - 1) * boardParameterDto.getSpp();
+		boardParameterDto.setStart(start);
+		return userBoardMapper.listArticle(boardParameterDto);
 	}
 
 	@Override
@@ -47,5 +52,15 @@ public class UserBoardServiceImpl implements UserBoardService{
 		return userBoardMapper.deleteArticle(articleNo);
 	}
 
-
+	@Override
+	public int getNum(Map<String, String> map) throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		String key = map.get("key");
+		if ("userid".equals(key)) key = "user_id";
+		param.put("key", key == null ? "" : key);
+		param.put("word", map.get("word") == null ? "" : map.get("word"));
+		int totalCount = userBoardMapper.getTotalAdminBoardCount(param);
+		
+		return totalCount;
+	}
 }

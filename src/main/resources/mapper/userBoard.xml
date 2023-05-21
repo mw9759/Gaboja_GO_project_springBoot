@@ -16,16 +16,25 @@
 
 	<!-- 모든 게시글 리스트 가져오기 -->
 	<select id="listArticle" resultMap="list">
-		select *
-		from boards
-		where type = "U"
-		order by article_no desc
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name
+		from boards b, members m
+		where b.user_id = m.user_id and b.type = 'U'
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				and subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				and b.${key} = #{word}
+			</if>
+		</if>
+		order by b.article_no desc
+		limit #{start}, #{spp}
 	</select>
 	
 	<!-- 게시글 등록 -->
 	<insert id="writeArticle" parameterType="userboardDto">
-		insert into boards(user_id, subject, content)
-		values (#{userId}, #{subject}, #{content})
+		insert into boards(user_id, subject, content, type)
+		values (#{userId}, #{subject}, #{content}, 'U')
 	</insert>
 			
 	<!-- 게시글 상세보기 -->
@@ -55,4 +64,18 @@
 		where article_no = #{articleNo}
 	</delete>
 	
+	<!-- 게시글 개수 -->
+	<select id="getTotalAdminBoardCount" parameterType="map" resultType="int">
+		select count(article_no)
+		from boards
+		where type = 'U'
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+					and subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+					and ${key} = #{word}
+			</if>
+		</if>
+	</select>
 </mapper>
