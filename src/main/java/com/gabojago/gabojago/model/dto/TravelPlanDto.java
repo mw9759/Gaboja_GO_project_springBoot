@@ -4,6 +4,7 @@ public class TravelPlanDto {
 
 	private String userId;
 	private String planName;
+	private String content;
 	
 	public String getUserId() {
 		return userId;
@@ -21,9 +22,16 @@ public class TravelPlanDto {
 		this.planName = planName;
 	}
 	
-	@Override
-	public String toString() {
-		return "TravelPlanDto [userId=" + userId + ", planName=" + planName + "]";
+	public String getContent() {
+		return content;
 	}
 	
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	@Override
+	public String toString() {
+		return "TravelPlanDto [userId=" + userId + ", planName=" + planName + ", content=" + content + "]";
+	}
 }

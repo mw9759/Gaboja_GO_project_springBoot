@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,10 +62,33 @@ public class TravelPlanController {
 		try {
 			travelPlanService.removePlan(travelPlanDto);
 		} catch(Exception e) {
-			return ResponseEntity.ok(true);
+			return ResponseEntity.ok(false);
 		}
 		
 		return ResponseEntity.ok(true);
+	}
+	
+	@ResponseBody
+	@PostMapping("/save")
+	@ApiOperation(value = "test", response = List.class)
+	public ResponseEntity<Boolean> savePlan(@RequestBody TravelPlanDto travelPlanDto) throws Exception {
+		try {
+			travelPlanService.savePlan(travelPlanDto);
+		} catch(Exception e) {
+			return ResponseEntity.ok(false);
+		}
+		
+		return ResponseEntity.ok(true);
+	}
+	
+	@ResponseBody
+	@GetMapping("/load")
+	@ApiOperation(value = "test", response = List.class)
+	public ResponseEntity<String> loadPlan(@ModelAttribute TravelPlanDto travelPlanDto) throws Exception {
+		System.out.println("!!!!!!!" + travelPlanDto);
+		String result = travelPlanService.loadPlan(travelPlanDto);
+		
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 	
 }

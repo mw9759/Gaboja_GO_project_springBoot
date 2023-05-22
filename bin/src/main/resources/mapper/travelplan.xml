@@ -3,7 +3,6 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.gabojago.gabojago.model.mapper.TravelPlanMapper">
-
 	<select id="planList" parameterType="String" resultType="String">
 		select plan_name
 		from plan
@@ -11,8 +10,8 @@
 	</select>
 	
 	<insert id="createPlan" parameterType="map">
-		insert into plan(user_id, plan_name, content)
-		values(#{userId}, #{planName}, "")
+		insert into plan(user_id, plan_name)
+		values(#{userId}, #{planName})
 	</insert>
 	
 	<delete id="removePlan" parameterType="map">
@@ -20,19 +19,4 @@
 		where user_id = #{userId}
 		and plan_name = #{planName}
 	</delete>
-	
-	<update id="savePlan" parameterType="map">
-		update plan
-		set content = #{content}
-		where user_id = #{userId}
-		and plan_name = #{planName}
-	</update>
-	
-	<select id="loadPlan" parameterType="map" resultType="String">
-		select content
-		from plan
-		where user_id = #{userId}
-		and plan_name = #{planName}
-	</select>
-	
 </mapper>

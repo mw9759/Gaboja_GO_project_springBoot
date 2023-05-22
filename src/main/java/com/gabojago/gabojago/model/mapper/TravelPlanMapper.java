@@ -12,5 +12,7 @@ public interface TravelPlanMapper {
 	List<String> planList(String userId) throws SQLException;
 	void createPlan(Map<String, String> map) throws Exception;
 	void removePlan(Map<String, String> map) throws Exception;
+	void savePlan(Map<String, String> map) throws Exception;
+	String loadPlan(Map<String, String> map) throws Exception;
 	
 }

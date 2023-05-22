@@ -68,15 +68,14 @@
 	<select id="getTotalAdminBoardCount" parameterType="map" resultType="int">
 		select count(article_no)
 		from boards
-		<where>
-			<if test="word != null and word != ''">
-				<if test="key == 'subject'">
+		where type = 'A'
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
 					and subject like concat('%', #{word}, '%')
-				</if>
-				<if test="key != 'subject'">
-					and ${key} = #{word}
-				</if>
 			</if>
-		</where>
+			<if test="key != 'subject'">
+					and ${key} = #{word}
+			</if>
+		</if>
 	</select>
 </mapper>
