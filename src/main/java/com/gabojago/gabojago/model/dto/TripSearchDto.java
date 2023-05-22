@@ -114,7 +114,7 @@ public class TripSearchDto {
 		return "TripSearchDto [contentId=" + contentId + ", contentTypeId=" + contentTypeId + ", title=" + title
 				+ ", addr1=" + addr1 + ", addr2=" + addr2 + ", zipcode=" + zipcode + ", tel=" + tel + ", firstImage="
 				+ firstImage + ", firstImage2=" + firstImage2 + ", readcount=" + readcount + ", sido_code=" + sido_code
-				+ ", gugun_code=" + gugun_code + ", latitude=" + latitude + ", longtitude=" + longitude + ", mlevel="
+				+ ", gugun_code=" + gugun_code + ", latitude=" + latitude + ", longitude=" + longitude + ", mlevel="
 				+ mlevel + "]";
 	}
 	public String getOverview() {
