@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.gabojago.gabojago.model.dto.BoardParameterDto;
+import com.gabojago.gabojago.model.dto.ImgInfos;
 import com.gabojago.gabojago.model.dto.UserBoardDto;
 @Mapper
 public interface UserBoardMapper {
@@ -25,4 +26,7 @@ public interface UserBoardMapper {
 	
 	int getTotalAdminBoardCount(Map<String, Object> map) throws SQLException;
 	
+	boolean registImgs(String imgs) throws Exception;
+	
+	List<ImgInfos> getImgs(ImgInfos imgs) throws Exception;
 }

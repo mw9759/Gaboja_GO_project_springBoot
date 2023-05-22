@@ -8,6 +8,23 @@ public class UserBoardDto {
 	private String photoUrl;
 	private int hit;
 	private String registerTime;
+	private String imgsIsExist;
+	private int imgSlideNum;
+	
+	
+	public int getImgSlideNum() {
+		return imgSlideNum;
+	}
+	public void setImgSlideNum(int imgSlideNum) {
+		this.imgSlideNum = imgSlideNum;
+	}
+	public String getImgsIsExist() {
+		return imgsIsExist;
+	}
+	public void setImgsIsExist(String imgsIsExist) {
+		this.imgsIsExist = imgsIsExist;
+	}
+	
 	public int getArticleNo() {
 		return articleNo;
 	}
@@ -52,9 +69,13 @@ public class UserBoardDto {
 	}
 	@Override
 	public String toString() {
-		return "userBoard [articleNo=" + articleNo + ", userId=" + userId + ", subject=" + subject + ", content="
-				+ content + ", photoUrl=" + photoUrl + ", hit=" + hit + ", registerTime=" + registerTime + "]";
+		return "UserBoardDto [articleNo=" + articleNo + ", userId=" + userId + ", subject=" + subject + ", content="
+				+ content + ", photoUrl=" + photoUrl + ", hit=" + hit + ", registerTime=" + registerTime
+				+ ", imgsIsExist=" + imgsIsExist + ", imgSlideNum=" + imgSlideNum + "]";
 	}
+	
+	
+	
 	
 	
 }

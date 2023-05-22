@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gabojago.gabojago.model.dto.UserBoardDto;
 import com.gabojago.gabojago.model.dto.AdminBoardDto;
 import com.gabojago.gabojago.model.dto.BoardParameterDto;
+import com.gabojago.gabojago.model.dto.ImgInfos;
 import com.gabojago.gabojago.model.dto.MemberDto;
 import com.gabojago.gabojago.model.service.UserBoardService;
 
@@ -55,6 +56,17 @@ public class UserBoardController {
 		}
 	}
 	
+	//등록 이미지 가져오기
+	@ApiOperation(value = "등록된 이미지 목록", notes = "모든 이미지를 반환한다.", response = List.class)
+	@GetMapping("/getImgs")
+	public ResponseEntity<?> getImgs(@ModelAttribute ImgInfos imgs) { 
+		try {
+			return new ResponseEntity<List<ImgInfos>>(userBoardService.getImgs(imgs), HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
 	// 페이징 처리
 		@ApiOperation(value = "게시판 총개수", notes = "게시판의 총 개수를 반환한다.", response = Integer.class)
 		@GetMapping("/total")
@@ -68,6 +80,7 @@ public class UserBoardController {
 	@PostMapping("/write")
 	public ResponseEntity<?> write(@RequestBody UserBoardDto userBoardDto) {
 		logger.debug("HotPlaceBoardDto info : {}", userBoardDto);
+		System.out.println(userBoardDto);
 		try {
 			if(userBoardService.writeArticle(userBoardDto)) {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -82,10 +95,35 @@ public class UserBoardController {
 	//게시글에 올라온 이미지 등록
 	@ApiOperation(value = "이미지 등록", response = String.class)
 	@PostMapping("/upload")
-	public void getImg(@RequestBody Map<String, List<String>> map){
+	public ResponseEntity<?> setImg(@RequestBody Map<String, List<String>> map){
 		List<String> imgs = map.get("imgBlobs");
-		System.out.println(map);
-        System.out.println(imgs);
+		
+		for(int i = 0; i<imgs.size(); i++) {
+			try {
+				if(userBoardService.registImgs(imgs.get(i))) {
+					
+					System.out.println("등록성공");
+				}
+				else {
+					System.out.println("등록실1");
+				}
+			} catch (Exception e) {
+				return exceptionHandling(e);
+			}
+		}
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		
+//		try {
+//			if(userBoardService.registImgs(imgs)) {
+//				System.out.println("등록성공");
+//				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+//			}
+//			System.out.println("등록할게 없음");
+//			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+//		} catch (Exception e) {
+//			System.out.println("등록실패");
+//			return exceptionHandling(e);
+//		}
 	}
 	
 	//게시글 상세보기
