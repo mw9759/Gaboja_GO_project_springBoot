@@ -12,11 +12,19 @@
 		<result column="content" property="content"/>
 		<result column="hit" property="hit"/>
 		<result column="register_time" property="registerTime"/>
+		<result column="imgs_is_exist" property="imgsIsExist"/>
+		<result column="img_slide_num" property="imgSlideNum"/>
 	</resultMap>
-
+	
+	<!-- 게시글 이미지들 담을 resultMap -->
+	<resultMap type="ImgInfos" id="imgs">
+		<result column="article_no" property="articleNo"/>
+		<result column="img_blob" property="imgBlob"/>
+	</resultMap>
+	
 	<!-- 모든 게시글 리스트 가져오기 -->
 	<select id="listArticle" resultMap="list">
-		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, b.imgs_is_exist
 		from boards b, members m
 		where b.user_id = m.user_id and b.type = 'U'
 		<if test="word != null and word != ''">
@@ -31,12 +39,35 @@
 		limit #{start}, #{spp}
 	</select>
 	
+	<!-- 모든 이미지 리스트 가져오기 -->
+	<select id="getImgs" resultMap="imgs">
+		select article_no, img_blob
+		from board_img;
+	</select>
+	
 	<!-- 게시글 등록 -->
 	<insert id="writeArticle" parameterType="userboardDto">
-		insert into boards(user_id, subject, content, type)
-		values (#{userId}, #{subject}, #{content}, 'U')
+		insert into boards(user_id, subject, content, type, imgs_is_exist)
+		values (#{userId}, #{subject}, #{content}, 'U', #{imgsIsExist})
 	</insert>
-			
+	
+	<!-- 이미지 등록여부 수정
+	<update id="imgOk">
+		update boards
+		set imgs_is_exist = 'Y'
+		where article_no = (SELECT article_no FROM boards WHERE type = 'U' ORDER BY register_time DESC LIMIT 1)
+	</update> -->
+	
+	
+	<!-- 사진등록 -->
+	<insert id="registImgs" parameterType="String">
+		    INSERT INTO board_img (article_no, img_blob)
+		    VALUES (
+		      (SELECT article_no FROM boards WHERE type = 'U' ORDER BY register_time DESC LIMIT 1),
+		      #{imgs}
+		    )
+	</insert>
+	
 	<!-- 게시글 상세보기 -->
 	<select id="getArticle" parameterType="int" resultMap="list">
 		select *

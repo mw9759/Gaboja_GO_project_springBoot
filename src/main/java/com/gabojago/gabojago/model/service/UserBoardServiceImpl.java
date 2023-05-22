@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.gabojago.gabojago.model.dto.BoardParameterDto;
+import com.gabojago.gabojago.model.dto.ImgInfos;
 import com.gabojago.gabojago.model.dto.UserBoardDto;
 import com.gabojago.gabojago.model.mapper.UserBoardMapper;
 
@@ -62,5 +63,15 @@ public class UserBoardServiceImpl implements UserBoardService{
 		int totalCount = userBoardMapper.getTotalAdminBoardCount(param);
 		
 		return totalCount;
+	}
+
+	@Override
+	public boolean registImgs(String imgs) throws Exception {
+		return userBoardMapper.registImgs(imgs);
+	}
+
+	@Override
+	public List<ImgInfos> getImgs(ImgInfos imgs) throws Exception {
+		return userBoardMapper.getImgs(imgs);
 	}
 }

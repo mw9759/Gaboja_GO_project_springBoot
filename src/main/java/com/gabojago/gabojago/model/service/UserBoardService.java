@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.gabojago.gabojago.model.dto.BoardParameterDto;
+import com.gabojago.gabojago.model.dto.ImgInfos;
 import com.gabojago.gabojago.model.dto.UserBoardDto;
 
 
@@ -24,4 +25,8 @@ public interface UserBoardService {
 	boolean deleteArticle(int articleNo)throws SQLException;
 
 	int getNum(Map<String,String> map) throws Exception;
+	
+	boolean registImgs(String imgs) throws Exception;
+	
+	List<ImgInfos> getImgs(ImgInfos imgs) throws Exception;
 }
