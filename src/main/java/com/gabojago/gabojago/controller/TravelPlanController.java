@@ -85,7 +85,6 @@ public class TravelPlanController {
 	@GetMapping("/load")
 	@ApiOperation(value = "test", response = List.class)
 	public ResponseEntity<String> loadPlan(@ModelAttribute TravelPlanDto travelPlanDto) throws Exception {
-		System.out.println("!!!!!!!" + travelPlanDto);
 		String result = travelPlanService.loadPlan(travelPlanDto);
 		
 		return new ResponseEntity<String>(result, HttpStatus.OK);
