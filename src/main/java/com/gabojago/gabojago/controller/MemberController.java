@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabojago.gabojago.model.dto.UserBoardDto;
+import com.gabojago.gabojago.model.dto.ImgInfos;
 import com.gabojago.gabojago.model.dto.MemberDto;
 import com.gabojago.gabojago.model.service.JwtServiceImpl;
 import com.gabojago.gabojago.model.service.MemberService;
@@ -50,11 +52,6 @@ public class MemberController{
 
 	@Autowired
 	private JwtServiceImpl jwtService;
-    // 로그인 페이지 이동.
-//	@GetMapping("/login")
-//	public String mvlogin() {
-//		return "user/login_signup";
-//	}
 	
 	// 로그인
 	@PostMapping("/login")
@@ -305,13 +302,24 @@ public class MemberController{
 	}
 	
 	//마이페이지 : 내가 쓴 글 출력
-	@GetMapping("/mypage/mywrites")
+	@GetMapping("/mywrites/{userId}")
 	@ApiOperation(value = "내 가 쓴 글 가져오기", response = List.class)
-	public ResponseEntity<?> getMyWrites(HttpSession session){
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+	public ResponseEntity<?> getMyWrites(@PathVariable("userId") String userId){
+		
 		try {
-			return new ResponseEntity<List<UserBoardDto>>(memberService.getmyBoards(memberDto.getUserId()), HttpStatus.OK);
+			return new ResponseEntity<List<UserBoardDto>>(memberService.getmyBoards(userId), HttpStatus.OK);
 		} catch (SQLException e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	//마이페이지 : 내가 쓴 올린 이미지 가져오기
+	@ApiOperation(value = "등록된 이미지 목록", notes = "모든 이미지를 반환한다.", response = List.class)
+	@GetMapping("/myimgs/{userId}")
+	public ResponseEntity<?> getmyImgs(@PathVariable("userId") String userId) { 
+		try {
+			return new ResponseEntity<List<ImgInfos>>(memberService.getMyImgs(userId), HttpStatus.OK);
+		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
 	}
@@ -343,11 +351,10 @@ public class MemberController{
 	}
 	
 	//회원탈퇴
-	@DeleteMapping("/mypage/delete/{userId}")
+	@DeleteMapping("/delete/{userId}")
 	@ApiOperation(value = "{id} 에 해당하는 사용자 정보를 삭제한다.", response = String.class)
-	public ResponseEntity<?> delete(@PathVariable("userId") String userId,
-							HttpSession session) {
-		session.invalidate();
+	public ResponseEntity<?> delete(@PathVariable("userId") String userId) {
+		System.out.println("여기옴");
 		try {
 			memberService.rmAccount(userId);
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -382,6 +389,21 @@ public class MemberController{
 			}
 			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 		} catch (SQLException e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	// 개인 프로필사진 변경
+	@PutMapping(value="/updateProfile")
+	@ApiOperation(value = "사용자프사 재설정.", response = String.class)
+	public ResponseEntity<?> modifyProfile(@RequestBody Map<String, String> map){
+		logger.debug("userRegister memberDto : {}", map);
+		try {
+			if(memberService.modifyProfile(map)) {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+			else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
 	}

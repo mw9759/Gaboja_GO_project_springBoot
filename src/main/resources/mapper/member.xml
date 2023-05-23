@@ -17,6 +17,8 @@
 		<result column="email_domain" property="emailDomain"/>
 		<result column="join_date" property="joinDate"/>
 		<result column="phone_number" property="userPhonNum"/>
+		<result column="slogun" property="slogun"/>
+		<result column="profile_img" property="profileImg"/>
 	</resultMap>
 	
 	<!-- 내가 쓴 핫플레이스 담을 resultMap -->
@@ -25,9 +27,16 @@
 		<result column="user_id" property="userId"/>
 		<result column="subject" property="subject"/>
 		<result column="content" property="content"/>
-		<result column="photo_url" property="photoUrl"/>
 		<result column="hit" property="hit"/>
 		<result column="register_time" property="registerTime"/>
+		<result column="imgs_is_exist" property="imgsIsExist"/>
+		<result column="img_slide_num" property="imgSlideNum"/>
+	</resultMap>
+	
+	<!-- 게시글 이미지들 담을 resultMap -->
+	<resultMap type="ImgInfos" id="imgs">
+		<result column="article_no" property="articleNo"/>
+		<result column="img_blob" property="imgBlob"/>
 	</resultMap>
 	
 	<!-- 입력 ID에 해당하는 SALT값 가져오기 -->
@@ -80,7 +89,7 @@
 	
 	<!-- 현재 로그인 회원 정보 가져오기 -->
 	<select id="showMyInfo" parameterType="String" resultMap="MyPageInfo">
-		select user_id, user_name, email_id, email_domain, join_date, phone_number
+		select user_id, user_name, email_id, email_domain, join_date, phone_number, slogun, profile_img
 		from members
 		where user_id = #{userid}
 	</select>
@@ -112,6 +121,25 @@
 		where user_id = #{userid} and type = "U"
 		order by article_no desc
 	</select>
+	
+	<!-- 내가 등록한 이미지 불러오기 -->
+	<select id="getMyImgs" parameterType="String" resultMap="imgs">
+		select article_no, img_blob
+		from board_img
+		where article_no in( select article_no
+					from boards
+                    where `type` = 'U' and user_id = #{userid});
+	</select>
+	
+	<!-- 내 프로필사진 수정 -->
+	<update id="modifyProfile" parameterType="map">
+		update members
+		set profile_img = #{profileImg} 
+		where user_id = #{userId}
+	</update>
+	
+	
+	
 	
 	<!-- 리프레시토큰저장 -->
 	<update id="saveRefreshToken" parameterType="map">

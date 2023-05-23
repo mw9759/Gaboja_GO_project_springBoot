@@ -10,8 +10,25 @@ public class MemberDto {
 	private String joinDate;
 	private String userPhonNum;
 	private String salt;
+	private String slogun;
+	private String profileImg;
 	
-	
+	public String getSlogun() {
+		return slogun;
+	}
+
+	public void setSlogun(String slogun) {
+		this.slogun = slogun;
+	}
+
+	public String getProfileImg() {
+		return profileImg;
+	}
+
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
+	}
+
 	public String getSalt() {
 		return salt;
 	}
@@ -80,7 +97,6 @@ public class MemberDto {
 	public String toString() {
 		return "MemberDto [userId=" + userId + ", userName=" + userName + ", userPwd=" + userPwd + ", emailId="
 				+ emailId + ", emailDomain=" + emailDomain + ", joinDate=" + joinDate + ", userPhonNum=" + userPhonNum
-				+ "]";
+				+ ", salt=" + salt + ", slogun=" + slogun + ", profileImg=" + profileImg + "]";
 	}
-
 }

@@ -31,4 +31,6 @@ public interface UserBoardMapper {
 	List<ImgInfos> getImgs(ImgInfos imgs) throws Exception;
 	
 	boolean deleteImgs(int articleNo) throws Exception;
+	
+	boolean modifyImg(ImgInfos imgInfos) throws Exception;
 }

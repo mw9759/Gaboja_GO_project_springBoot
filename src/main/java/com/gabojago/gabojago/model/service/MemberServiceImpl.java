@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.gabojago.gabojago.model.dto.UserBoardDto;
+import com.gabojago.gabojago.model.dto.ImgInfos;
 import com.gabojago.gabojago.model.dto.MemberDto;
 import com.gabojago.gabojago.model.mapper.MemberMapper;
 
@@ -103,5 +104,15 @@ public class MemberServiceImpl implements MemberService {
 		map.put("userid", userid);
 		map.put("token", null);
 		memberMapper.deleteRefreshToken(map);
+	}
+
+	@Override
+	public List<ImgInfos> getMyImgs(String userid) throws Exception {
+		return memberMapper.getMyImgs(userid);
+	}
+
+	@Override
+	public boolean modifyProfile(Map<String, String> map) throws Exception {
+		return memberMapper.modifyProfile(map);
 	}
 }

@@ -79,4 +79,9 @@ public class UserBoardServiceImpl implements UserBoardService{
 	public boolean deleteImgs(int articleNo) throws Exception {
 		return userBoardMapper.deleteImgs(articleNo);
 	}
+
+	@Override
+	public boolean modifyImg(ImgInfos imgInfos) throws Exception {
+		return userBoardMapper.modifyImg(imgInfos);
+	}
 }

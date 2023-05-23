@@ -6,6 +6,7 @@ import java.util.Map;
 
 
 import com.gabojago.gabojago.model.dto.UserBoardDto;
+import com.gabojago.gabojago.model.dto.ImgInfos;
 import com.gabojago.gabojago.model.dto.MemberDto;
 
 
@@ -26,4 +27,6 @@ public interface MemberService {
 	void saveRefreshToken(String string, String refreshToken)throws SQLException;
 	public Object getRefreshToken(String userid) throws Exception;
 	public void deleRefreshToken(String userid) throws Exception;
+	List<ImgInfos> getMyImgs(String userid) throws Exception;
+	boolean modifyProfile(Map<String, String> map) throws Exception;
 }

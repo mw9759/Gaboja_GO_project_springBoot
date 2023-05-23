@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.gabojago.gabojago.model.dto.UserBoardDto;
+import com.gabojago.gabojago.model.dto.ImgInfos;
 import com.gabojago.gabojago.model.dto.MemberDto;
 
 @Mapper
@@ -27,4 +28,6 @@ public interface MemberMapper {
 	void saveRefreshToken(Map<String, String> map) throws SQLException;
 	public Object getRefreshToken(String userid) throws SQLException;
 	public void deleteRefreshToken(Map<String, String> map) throws SQLException;
+	List<ImgInfos> getMyImgs(String userid) throws Exception;
+	boolean modifyProfile(Map<String, String> map) throws Exception;
 }

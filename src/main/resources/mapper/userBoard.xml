@@ -51,6 +51,12 @@
 		where article_no = ${articleNo}
 	</delete>
 	
+	<!-- 해당 게시글의 이미지 수정: 등록 -->
+	<insert id="modifyImg" parameterType="ImgInfos">
+		    INSERT INTO board_img (article_no, img_blob)
+		    VALUES (#{articleNo}, #{imgBlob})
+	</insert>
+	
 	<!-- 게시글 등록 -->
 	<insert id="writeArticle" parameterType="userboardDto">
 		insert into boards(user_id, subject, content, type, imgs_is_exist)

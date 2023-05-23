@@ -99,7 +99,7 @@ public class UserBoardController {
 	@PostMapping("/upload")
 	public ResponseEntity<?> setImg(@RequestBody Map<String, List<String>> map){
 		List<String> imgs = map.get("imgBlobs");
-		
+		System.out.println("잉?");
 		for(int i = 0; i<imgs.size(); i++) {
 			try {
 				if(userBoardService.registImgs(imgs.get(i))) {
@@ -107,25 +107,41 @@ public class UserBoardController {
 					System.out.println("등록성공");
 				}
 				else {
-					System.out.println("등록실1");
+					System.out.println("등록실패");
 				}
 			} catch (Exception e) {
 				return exceptionHandling(e);
 			}
 		}
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		
-//		try {
-//			if(userBoardService.registImgs(imgs)) {
-//				System.out.println("등록성공");
-//				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-//			}
-//			System.out.println("등록할게 없음");
-//			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
-//		} catch (Exception e) {
-//			System.out.println("등록실패");
-//			return exceptionHandling(e);
-//		}
+	}
+	
+	//해당 게시글에 이미지 수정등록
+	@ApiOperation(value = "이미지 등록", response = String.class)
+	@PostMapping("/updateImg")
+	public ResponseEntity<?> updateImg(@RequestBody Map<String, List<String>> map
+			){
+		List<String> imgs = map.get("imgBlobs");
+		List<String> article = map.get("articleNo");
+		int articleNo = Integer.parseInt(article.get(0));
+		for(int i = 0; i<imgs.size(); i++) {
+			try {
+				ImgInfos imgInfos = new ImgInfos(); 
+				imgInfos.setArticleNo(articleNo);
+				imgInfos.setImgBlob(imgs.get(i));
+				
+				if(userBoardService.modifyImg(imgInfos)) {
+					
+					System.out.println("등록성공");
+				}
+				else {
+					System.out.println("등록실패");
+				}
+			} catch (Exception e) {
+				return exceptionHandling(e);
+			}
+		}
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
 	
 	//게시글 조회수 증가
