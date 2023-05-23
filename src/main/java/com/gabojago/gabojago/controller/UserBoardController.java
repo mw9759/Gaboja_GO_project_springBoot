@@ -14,10 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -126,38 +128,40 @@ public class UserBoardController {
 //		}
 	}
 	
-	//게시글 상세보기
-	@ApiOperation(value = "게시글 상세보기", notes = "글번호에 해당하는 게시글의 정보를 반환한다.", response = UserBoardDto.class)
+	//게시글 조회수 증가
+	@ApiOperation(value = "게시글 조회수 증가", notes = "글번호에 해당하는 게시글의 조회수 증가.", response = List.class)
 	@GetMapping("/view/{articleNo}")
-	public ResponseEntity<?> view(@PathVariable("articleNo") int articleNo) {
+	public ResponseEntity<?> view(@PathVariable("articleNo") int articleNo,
+			@ModelAttribute BoardParameterDto boardParameterDto) {
 		try {
 			userBoardService.updateHit(articleNo);
-			return new ResponseEntity<UserBoardDto>(userBoardService.getArticle(articleNo), HttpStatus.OK);
+			return new ResponseEntity<List<UserBoardDto>>(userBoardService.listArticle(boardParameterDto), HttpStatus.OK);
 		} catch (SQLException e) {
 			return exceptionHandling(e);
 		}
 	}
 	
-	//게시글 수정페이지 이동
-//	@GetMapping("/modify/{articleNo}")
-//	public String mvmodify(@PathVariable("articleNo") int articleNo, Model model) {
-//		try {
-//			UserBoardDto boardDto = userBoardService.getArticle(articleNo);
-//			model.addAttribute("article", boardDto);
-//			return "hotplboard/modifyHotpl";
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			return "index";
-//		}
-//	}
+	//등록된 이미지 삭제.deleteImg
+	@ApiOperation(value = "등록된 이미지 삭제", notes = "이미지를 삭제한다.", response = String.class)
+	@DeleteMapping("/deleteImg/{articleNo}")
+	public ResponseEntity<?> deleteImgs(@PathVariable("articleNo") int articleNo) { 
+		try {
+			if(userBoardService.deleteImgs(articleNo)) {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 	
 	//게시글 수정
 	@ApiOperation(value = "게시글수정", notes = "수정할 게시글 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-	@PostMapping("/modify")
-	public ResponseEntity<?> modify(@RequestBody UserBoardDto hotplDto) {
-		logger.debug("HotPlaceBoardDto info : {}", hotplDto);
+	@PutMapping("/modify")
+	public ResponseEntity<?> modify(@RequestBody UserBoardDto userBoardDto) {
+		logger.debug("HotPlaceBoardDto info : {}", userBoardDto);
 		try {
-			if(userBoardService.modifyArticle(hotplDto)) {
+			if(userBoardService.modifyArticle(userBoardDto)) {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
@@ -168,8 +172,8 @@ public class UserBoardController {
 	
 	//게시글 삭제
 	@ApiOperation(value = "게시글 삭제", notes = "게시글에 해당하는 게시글 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-	@GetMapping("/delete/{articleNo}")
-	public ResponseEntity<?> delete(@PathVariable("articleNo") int articleNo,Model model) {
+	@DeleteMapping("/delete/{articleNo}")
+	public ResponseEntity<?> delete(@PathVariable("articleNo") int articleNo) {
 		try {
 			if(userBoardService.deleteArticle(articleNo)) {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
