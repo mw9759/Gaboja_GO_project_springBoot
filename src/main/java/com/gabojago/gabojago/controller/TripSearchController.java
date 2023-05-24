@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabojago.gabojago.model.dto.TripSearchDto;
@@ -36,7 +35,6 @@ public class TripSearchController {
 		this.tripSearchService = tripSearchService;
 	}
 	
-	@ResponseBody
 	@PostMapping("/list")
 	@ApiOperation(value = "test", response = List.class)
 	public ResponseEntity<?> list(@RequestBody Map<String, String> map) throws Exception {
@@ -55,4 +53,6 @@ public class TripSearchController {
 		
 		return new ResponseEntity<List<TripSearchDto>>(result, HttpStatus.OK);
 	}
+	
+	
 }

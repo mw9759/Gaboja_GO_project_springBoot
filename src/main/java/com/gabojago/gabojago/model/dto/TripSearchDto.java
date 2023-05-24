@@ -19,6 +19,9 @@ public class TripSearchDto {
 	private String mlevel;
 	private String overview;
 	private double distance;
+	private int like;
+	private int commentNum;
+	
 	public int getContentId() {
 		return contentId;
 	}
@@ -109,14 +112,6 @@ public class TripSearchDto {
 	public void setMlevel(String mlevel) {
 		this.mlevel = mlevel;
 	}
-	@Override
-	public String toString() {
-		return "TripSearchDto [contentId=" + contentId + ", contentTypeId=" + contentTypeId + ", title=" + title
-				+ ", addr1=" + addr1 + ", addr2=" + addr2 + ", zipcode=" + zipcode + ", tel=" + tel + ", firstImage="
-				+ firstImage + ", firstImage2=" + firstImage2 + ", readcount=" + readcount + ", sido_code=" + sido_code
-				+ ", gugun_code=" + gugun_code + ", latitude=" + latitude + ", longitude=" + longitude + ", mlevel="
-				+ mlevel + "]";
-	}
 	public String getOverview() {
 		return overview;
 	}
@@ -129,7 +124,27 @@ public class TripSearchDto {
 	public void setDistance(double distance) {
 		this.distance = distance;
 	}
+	public int getLike() {
+		return like;
+	}
+	public void setLike(int like) {
+		this.like = like;
+	}
+	public int getCommentNum() {
+		return commentNum;
+	}
+	public void setCommentNum(int commentNum) {
+		this.commentNum = commentNum;
+	}
 	
-
+	@Override
+	public String toString() {
+		return "TripSearchDto [contentId=" + contentId + ", contentTypeId=" + contentTypeId + ", title=" + title
+				+ ", addr1=" + addr1 + ", addr2=" + addr2 + ", zipcode=" + zipcode + ", tel=" + tel + ", firstImage="
+				+ firstImage + ", firstImage2=" + firstImage2 + ", readcount=" + readcount + ", sido_code=" + sido_code
+				+ ", gugun_code=" + gugun_code + ", latitude=" + latitude + ", longitude=" + longitude + ", mlevel="
+				+ mlevel + ", overview=" + overview + ", distance=" + distance + ", like=" + like + ", commentNum="
+				+ commentNum + "]";
+	}
 	
 }
