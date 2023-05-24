@@ -111,4 +111,9 @@ public class UserBoardServiceImpl implements UserBoardService{
 	public boolean modifyComment(UserBoardCommentsDto comment) {
 		return userBoardMapper.modifyComment(comment);
 	}
+
+	@Override
+	public List<UserBoardDto> listTop3() throws Exception {
+		return userBoardMapper.listTop3();
+	}
 }

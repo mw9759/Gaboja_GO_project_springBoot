@@ -59,6 +59,17 @@ public class UserBoardController {
 		}
 	}
 	
+	//조회수 탑3 게시글만 가져오기
+	@ApiOperation(value = "게시글 글목록", notes = "탑3 게시글의 정보를 반환한다.", response = List.class)
+	@GetMapping("/listtop3")
+	public ResponseEntity<?> listTop3() { 
+		try {
+			return new ResponseEntity<List<UserBoardDto>>(userBoardService.listTop3(), HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
 	//등록 이미지 가져오기
 	@ApiOperation(value = "등록된 이미지 목록", notes = "모든 이미지를 반환한다.", response = List.class)
 	@GetMapping("/getImgs")
