@@ -45,4 +45,6 @@ public interface UserBoardService {
 	boolean deleteComment(int commentNo)throws Exception;
 
 	boolean modifyComment(UserBoardCommentsDto comment);
+
+	List<UserBoardDto> listTop3()throws Exception;
 }

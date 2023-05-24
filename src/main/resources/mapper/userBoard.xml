@@ -170,4 +170,13 @@
 		set content = #{content}, is_modify = 1
 		where comment_no = ${commentNo}
 	</update>
+	
+	<!-- 조회수 TOP3 -->
+	<select id="listTop3" resultMap="list">
+		select *
+		from boards
+		where type = "U"
+		order by hit desc
+		limit 3
+	</select>
 </mapper>

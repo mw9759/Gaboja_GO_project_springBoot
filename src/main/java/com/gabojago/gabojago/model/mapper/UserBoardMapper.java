@@ -45,4 +45,7 @@ public interface UserBoardMapper {
 	boolean deleteComment(int commentNo)throws Exception;
 	
 	boolean modifyComment(UserBoardCommentsDto comment);
+	
+	//메인홈
+	List<UserBoardDto> listTop3()throws Exception;
 }
