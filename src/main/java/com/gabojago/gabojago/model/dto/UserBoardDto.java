@@ -10,8 +10,21 @@ public class UserBoardDto {
 	private String registerTime;
 	private String imgsIsExist;
 	private int imgSlideNum;
+	private int commentCnt;
+	private int likeCnt;
 	
-	
+	public int getLikeCnt() {
+		return likeCnt;
+	}
+	public void setLikeCnt(int likeCnt) {
+		this.likeCnt = likeCnt;
+	}
+	public int getCommentCnt() {
+		return commentCnt;
+	}
+	public void setCommentCnt(int commentCnt) {
+		this.commentCnt = commentCnt;
+	}
 	public int getImgSlideNum() {
 		return imgSlideNum;
 	}
@@ -71,11 +84,7 @@ public class UserBoardDto {
 	public String toString() {
 		return "UserBoardDto [articleNo=" + articleNo + ", userId=" + userId + ", subject=" + subject + ", content="
 				+ content + ", photoUrl=" + photoUrl + ", hit=" + hit + ", registerTime=" + registerTime
-				+ ", imgsIsExist=" + imgsIsExist + ", imgSlideNum=" + imgSlideNum + "]";
+				+ ", imgsIsExist=" + imgsIsExist + ", imgSlideNum=" + imgSlideNum + ", commentCnt=" + commentCnt
+				+ ", likeCnt=" + likeCnt + "]";
 	}
-	
-	
-	
-	
-	
 }

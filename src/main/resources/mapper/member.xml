@@ -19,6 +19,7 @@
 		<result column="phone_number" property="userPhonNum"/>
 		<result column="slogun" property="slogun"/>
 		<result column="profile_img" property="profileImg"/>
+		<result column="like_boards" property="likeBoards"/>
 	</resultMap>
 	
 	<!-- 내가 쓴 핫플레이스 담을 resultMap -->
@@ -31,6 +32,8 @@
 		<result column="register_time" property="registerTime"/>
 		<result column="imgs_is_exist" property="imgsIsExist"/>
 		<result column="img_slide_num" property="imgSlideNum"/>
+		<result column="comments_cnt" property="commentCnt"/>
+		<result column="like_cnt" property="likeCnt"/>
 	</resultMap>
 	
 	<!-- 게시글 이미지들 담을 resultMap -->
@@ -89,7 +92,7 @@
 	
 	<!-- 현재 로그인 회원 정보 가져오기 -->
 	<select id="showMyInfo" parameterType="String" resultMap="MyPageInfo">
-		select user_id, user_name, email_id, email_domain, join_date, phone_number, slogun, profile_img
+		select user_id, user_name, email_id, email_domain, join_date, phone_number, slogun, profile_img, like_boards
 		from members
 		where user_id = #{userid}
 	</select>
@@ -138,8 +141,19 @@
 		where user_id = #{userId}
 	</update>
 	
+	<!-- 내가 좋아요 누른 게시글 정보 업데이트 -->
+	<update id="updateLike" parameterType="map">
+		update members
+		set like_boards = #{likeBoards}
+		where user_id = #{userId}
+	</update>
 	
-	
+	<!-- 좋아요 변동 후 게시글 좋아요 수 업데이트 -->
+	<update id="updateLikeCnt" parameterType="map">
+		update boards
+		set like_cnt = #{likeCnt}
+		where article_no = #{articleNo}
+	</update>
 	
 	<!-- 리프레시토큰저장 -->
 	<update id="saveRefreshToken" parameterType="map">

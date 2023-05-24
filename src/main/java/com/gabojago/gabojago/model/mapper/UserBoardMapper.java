@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.gabojago.gabojago.model.dto.BoardParameterDto;
 import com.gabojago.gabojago.model.dto.ImgInfos;
+import com.gabojago.gabojago.model.dto.UserBoardCommentsDto;
 import com.gabojago.gabojago.model.dto.UserBoardDto;
 @Mapper
 public interface UserBoardMapper {
@@ -33,4 +34,15 @@ public interface UserBoardMapper {
 	boolean deleteImgs(int articleNo) throws Exception;
 	
 	boolean modifyImg(ImgInfos imgInfos) throws Exception;
+	
+	// 댓글관련
+	List<UserBoardCommentsDto> getComments(int articleNo) throws Exception;
+
+	boolean writeComment(UserBoardCommentsDto comment) throws Exception;
+	
+	void updateCommentsCnt(int articleNo) throws Exception;
+	
+	boolean deleteComment(int commentNo)throws Exception;
+	
+	boolean modifyComment(UserBoardCommentsDto comment);
 }

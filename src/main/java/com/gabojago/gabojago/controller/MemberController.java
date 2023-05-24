@@ -407,6 +407,23 @@ public class MemberController{
 			return exceptionHandling(e);
 		}
 	}
+	
+	//좋아요 게시글 업데이트.
+	@PutMapping(value="/updateLike")
+	@ApiOperation(value = "게시글 좋아요 업데이트.", response = String.class)
+	public ResponseEntity<String> likeBoard(@RequestBody Map<String, String> map){
+		try {
+			if(memberService.updateLike(map)) {
+				memberService.updateLikeCnt(map);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+			else return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	
 // -----------------------비밀번호 암호화 관련 메서드--------------------------------------------------------------------------------
 	// 비밀번호 암호화 개인 salt값 생성
 	private static final int SALT_SIZE = 16;

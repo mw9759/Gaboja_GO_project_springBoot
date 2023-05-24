@@ -29,4 +29,7 @@ public interface MemberService {
 	public void deleRefreshToken(String userid) throws Exception;
 	List<ImgInfos> getMyImgs(String userid) throws Exception;
 	boolean modifyProfile(Map<String, String> map) throws Exception;
+	boolean updateLike(Map<String, String> map);
+	
+	void updateLikeCnt(Map<String, String> map);
 }

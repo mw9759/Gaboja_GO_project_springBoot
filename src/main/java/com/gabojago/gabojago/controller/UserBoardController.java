@@ -31,6 +31,7 @@ import com.gabojago.gabojago.model.dto.AdminBoardDto;
 import com.gabojago.gabojago.model.dto.BoardParameterDto;
 import com.gabojago.gabojago.model.dto.ImgInfos;
 import com.gabojago.gabojago.model.dto.MemberDto;
+import com.gabojago.gabojago.model.dto.UserBoardCommentsDto;
 import com.gabojago.gabojago.model.service.UserBoardService;
 
 import io.swagger.annotations.ApiOperation;
@@ -192,6 +193,64 @@ public class UserBoardController {
 	public ResponseEntity<?> delete(@PathVariable("articleNo") int articleNo) {
 		try {
 			if(userBoardService.deleteArticle(articleNo)) {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	//댓글관련
+	// 댓글 리스트 가져오기
+	@ApiOperation(value = "댓글 리스트 가져오기", notes = "게시글에 해당하는 댓글을 가져온다.", response = List.class)
+	@GetMapping("/getComments/{articleNo}")
+	private ResponseEntity<?> getComments(@PathVariable("articleNo") int articleNo){
+		try {
+			return new ResponseEntity<List<UserBoardCommentsDto>>(userBoardService.getComments(articleNo), HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	// 댓글 작성하기 writeComment
+	@ApiOperation(value = "댓글 작성", notes = "새로운 댓글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+	@PostMapping("/writeComment")
+	public ResponseEntity<?> writeComment(@RequestBody UserBoardCommentsDto comment) {
+		System.out.println(comment);
+		try {
+			if(userBoardService.writeComment(comment)) {
+				userBoardService.updateCommentsCnt(comment.getArticleNo()); // 댓글 작성 게시글 조회수 증가.
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	//댓글 삭제
+	@ApiOperation(value = "댓글 삭제", notes = "게시글에 해당하는 댓글을 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+	@PostMapping("/deleteComment")
+	public ResponseEntity<?> deleteComment(@RequestBody UserBoardCommentsDto comment) {
+		System.out.println("여긴오나");
+		try {
+			if(userBoardService.deleteComment(comment.getCommentNo())) {
+				userBoardService.updateCommentsCnt(comment.getArticleNo()); // 댓글 작성 게시글 조회수 감소.
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	// 댓글 수정
+	@ApiOperation(value = "댓글수정", notes = "수정할 댓글 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+	@PutMapping("/modifyComment")
+	public ResponseEntity<?> modifyComment(@RequestBody UserBoardCommentsDto comment) {
+		try {
+			if(userBoardService.modifyComment(comment)) {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 			return new ResponseEntity<String>(FAIL, HttpStatus.OK);

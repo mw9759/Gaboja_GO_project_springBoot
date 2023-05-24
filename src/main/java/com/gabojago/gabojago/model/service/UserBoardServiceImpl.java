@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.gabojago.gabojago.model.dto.BoardParameterDto;
 import com.gabojago.gabojago.model.dto.ImgInfos;
+import com.gabojago.gabojago.model.dto.UserBoardCommentsDto;
 import com.gabojago.gabojago.model.dto.UserBoardDto;
 import com.gabojago.gabojago.model.mapper.UserBoardMapper;
 
@@ -83,5 +84,31 @@ public class UserBoardServiceImpl implements UserBoardService{
 	@Override
 	public boolean modifyImg(ImgInfos imgInfos) throws Exception {
 		return userBoardMapper.modifyImg(imgInfos);
+	}
+	
+	// 댓글관련
+	@Override
+	public List<UserBoardCommentsDto> getComments(int articleNo) throws Exception {
+		return userBoardMapper.getComments(articleNo);
+	}
+
+	@Override
+	public boolean writeComment(UserBoardCommentsDto comment) throws Exception {
+		return userBoardMapper.writeComment(comment);
+	}
+
+	@Override
+	public void updateCommentsCnt(int articleNo) throws Exception {
+		userBoardMapper.updateCommentsCnt(articleNo);
+	}
+
+	@Override
+	public boolean deleteComment(int commentNo) throws Exception {
+		return userBoardMapper.deleteComment(commentNo);
+	}
+
+	@Override
+	public boolean modifyComment(UserBoardCommentsDto comment) {
+		return userBoardMapper.modifyComment(comment);
 	}
 }

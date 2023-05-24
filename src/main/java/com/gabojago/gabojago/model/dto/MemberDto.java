@@ -12,7 +12,16 @@ public class MemberDto {
 	private String salt;
 	private String slogun;
 	private String profileImg;
+	private String likeBoards;
 	
+	public String getLikeBoards() {
+		return likeBoards;
+	}
+
+	public void setLikeBoards(String likeBoards) {
+		this.likeBoards = likeBoards;
+	}
+
 	public String getSlogun() {
 		return slogun;
 	}
@@ -97,6 +106,9 @@ public class MemberDto {
 	public String toString() {
 		return "MemberDto [userId=" + userId + ", userName=" + userName + ", userPwd=" + userPwd + ", emailId="
 				+ emailId + ", emailDomain=" + emailDomain + ", joinDate=" + joinDate + ", userPhonNum=" + userPhonNum
-				+ ", salt=" + salt + ", slogun=" + slogun + ", profileImg=" + profileImg + "]";
+				+ ", salt=" + salt + ", slogun=" + slogun + ", profileImg=" + profileImg + ", likeBoards=" + likeBoards
+				+ "]";
 	}
+
+	
 }

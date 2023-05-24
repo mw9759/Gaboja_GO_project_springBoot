@@ -30,4 +30,7 @@ public interface MemberMapper {
 	public void deleteRefreshToken(Map<String, String> map) throws SQLException;
 	List<ImgInfos> getMyImgs(String userid) throws Exception;
 	boolean modifyProfile(Map<String, String> map) throws Exception;
+	
+	boolean updateLike(Map<String, String> map);
+	void updateLikeCnt(Map<String, String> map);
 }

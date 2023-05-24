@@ -115,4 +115,14 @@ public class MemberServiceImpl implements MemberService {
 	public boolean modifyProfile(Map<String, String> map) throws Exception {
 		return memberMapper.modifyProfile(map);
 	}
+
+	@Override
+	public boolean updateLike(Map<String, String> map) {
+		return memberMapper.updateLike(map);
+	}
+
+	@Override
+	public void updateLikeCnt(Map<String, String> map) {
+		memberMapper.updateLikeCnt(map);
+	}
 }
