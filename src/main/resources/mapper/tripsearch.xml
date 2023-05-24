@@ -32,6 +32,6 @@
 		and content_type_id = #{contentTypeId}
 		AND title LIKE CONCAT('%', #{keyword}, '%')
 		and attraction_info.content_id = attraction_description.content_id
-		order by title limit 20;
+		order by title;
 	</select>
 </mapper>

@@ -45,6 +45,18 @@
 		from board_img;
 	</select>
 	
+	<!-- 해당 게시글의 이미지 삭제 -->
+	<delete id="deleteImgs" parameterType="int">
+		delete from board_img
+		where article_no = ${articleNo}
+	</delete>
+	
+	<!-- 해당 게시글의 이미지 수정: 등록 -->
+	<insert id="modifyImg" parameterType="ImgInfos">
+		    INSERT INTO board_img (article_no, img_blob)
+		    VALUES (#{articleNo}, #{imgBlob})
+	</insert>
+	
 	<!-- 게시글 등록 -->
 	<insert id="writeArticle" parameterType="userboardDto">
 		insert into boards(user_id, subject, content, type, imgs_is_exist)
@@ -85,7 +97,7 @@
 	<!-- 게시글 수정 -->
 	<update id="modifyArticle" parameterType="userboardDto">
 		update boards
-		set subject = #{subject}, content = #{content}
+		set subject = #{subject}, content = #{content}, imgs_is_exist = #{imgsIsExist}
 		where article_no = #{articleNo}
 	</update>
 	
