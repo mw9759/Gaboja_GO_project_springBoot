@@ -263,41 +263,18 @@ public class MemberController{
 			return exceptionHandling(e);
 		}
 	}
-	
-	//마이페이지 : 내정보 출력
-	@GetMapping("/myinfo")
-	@ApiOperation(value = "내 정보 가져오기", response = MemberDto.class)
-	public ResponseEntity<?> mvMyPage(HttpSession session, 
-						   HttpServletResponse response
-						   ) {
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-		if (memberDto != null) {
-			String userid = memberDto.getUserId();
-			MemberDto myInfo = null;
-			try {
-				myInfo = memberService.showMyInfo(userid);
-				if(myInfo != null) {
-					return new ResponseEntity<MemberDto>(myInfo, HttpStatus.OK);
-				}
-				else
-					return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-				
-//				List<HotPlaceBoardDto> mylist = memberService.getmyHotPlace(userid);
-//				if(myInfo != null) {
-//					model.addAttribute("myInfo", myInfo);
-//					model.addAttribute("myhotpls", mylist);
-//					String fnum = myInfo.getUserPhonNum().substring(3, 7);
-//					String bnum = myInfo.getUserPhonNum().substring(7);
-//					model.addAttribute("fnum", fnum);
-//					model.addAttribute("bnum", bnum);
-//					return "user/mypage";
-//				}
-			} catch (SQLException e) { //에러처리
-				return exceptionHandling(e);
+	//유저프로필 : 유저정보 가져오기
+	@GetMapping("/userinfo/{userId}")
+	@ApiOperation(value = "해당 유저 정보 가져오기", response = MemberDto.class)
+	public ResponseEntity<?> userPage(@PathVariable("userId") String userId){
+		try {
+			MemberDto userInfo = memberService.showMyInfo(userId);
+			if(userInfo != null) {
+				return new ResponseEntity<MemberDto>(userInfo, HttpStatus.OK);
 			}
-		}
-		else { // 로그인 정보가 없음.
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		} catch (SQLException e) {
+			return exceptionHandling(e);
 		}
 	}
 	
