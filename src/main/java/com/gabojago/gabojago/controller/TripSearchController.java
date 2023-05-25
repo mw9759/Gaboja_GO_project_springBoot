@@ -38,7 +38,6 @@ public class TripSearchController {
 	@PostMapping("/list")
 	@ApiOperation(value = "test", response = List.class)
 	public ResponseEntity<?> list(@RequestBody Map<String, String> map) throws Exception {
-		logger.debug("list map : {}", map);
 		
 		int sido = ParameterCheck.notNumberToZero(map.get("searchArea"));
 		int contentTypeId = ParameterCheck.notNumberToOne(map.get("searchContentId"));
@@ -50,7 +49,6 @@ public class TripSearchController {
 		if(longitude == null || longitude == "") longitude="1";
 		
 		List<TripSearchDto> result = tripSearchService.tripList(sido, contentTypeId, keyword, sortType, Double.parseDouble(latitude), Double.parseDouble(longitude));
-		System.out.println(result);
 		
 		return new ResponseEntity<List<TripSearchDto>>(result, HttpStatus.OK);
 	}

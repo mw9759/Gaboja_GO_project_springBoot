@@ -20,6 +20,7 @@
 		<result column="slogun" property="slogun"/>
 		<result column="profile_img" property="profileImg"/>
 		<result column="like_boards" property="likeBoards"/>
+		<result column="like_attractions" property="likeAttractions"/>
 	</resultMap>
 	
 	<!-- 내가 쓴 핫플레이스 담을 resultMap -->
@@ -92,7 +93,7 @@
 	
 	<!-- 현재 로그인 회원 정보 가져오기 -->
 	<select id="showMyInfo" parameterType="String" resultMap="MyPageInfo">
-		select user_id, user_name, email_id, email_domain, join_date, phone_number, slogun, profile_img, like_boards
+		select user_id, user_name, email_id, email_domain, join_date, phone_number, slogun, profile_img, like_boards, like_attractions
 		from members
 		where user_id = #{userid}
 	</select>

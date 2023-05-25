@@ -81,11 +81,15 @@ public class TravelPlanServiceImpl implements TravelPlanService {
 	@Override
 	public boolean updateLike(Map<String, String> map) throws Exception {
 		System.out.println(map.get("like") + " " + map.get("contentId"));
+		System.out.println(map.get("likeAttractions"));
 		return travelPlanMapper.updateLike(map);
 	}
 	
 	@Override
 	public void myLike(Map<String, String> map) throws Exception {
+		System.out.println(1);
+		System.out.println(map.get("likeAttractions"));
+		System.out.println(map.get("userId"));
 		travelPlanMapper.myLike(map);
 	}
 

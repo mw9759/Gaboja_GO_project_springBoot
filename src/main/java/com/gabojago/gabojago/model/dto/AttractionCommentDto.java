@@ -7,7 +7,15 @@ public class AttractionCommentDto {
 	private String content;
 	private String registerTime;
 	private int isModify;
+	private String profileImg;
 	
+	
+	public String getProfileImg() {
+		return profileImg;
+	}
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
+	}
 	public int getCommentId() {
 		return commentId;
 	}

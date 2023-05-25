@@ -16,6 +16,7 @@
 		<result column="img_slide_num" property="imgSlideNum"/>
 		<result column="comments_cnt" property="commentCnt"/>
 		<result column="like_cnt" property="likeCnt"/>
+		<result column="profile_img" property="profileImg"/>
 	</resultMap>
 	
 	<!-- 게시글 이미지들 담을 resultMap -->
@@ -37,7 +38,7 @@
 	
 	<!-- 모든 게시글 리스트 가져오기 -->
 	<select id="listArticle" resultMap="list">
-		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, b.imgs_is_exist, b.like_cnt, b.comments_cnt
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, b.imgs_is_exist, b.like_cnt, b.comments_cnt, m.profile_img
 		from boards b, members m
 		where b.user_id = m.user_id and b.type = 'U'
 		<if test="word != null and word != ''">

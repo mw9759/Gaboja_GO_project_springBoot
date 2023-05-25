@@ -13,7 +13,16 @@ public class MemberDto {
 	private String slogun;
 	private String profileImg;
 	private String likeBoards;
+	private String likeAttractions;
 	
+	public String getLikeAttractions() {
+		return likeAttractions;
+	}
+
+	public void setLikeAttractions(String likeAttractions) {
+		this.likeAttractions = likeAttractions;
+	}
+
 	public String getLikeBoards() {
 		return likeBoards;
 	}

@@ -12,7 +12,14 @@ public class UserBoardDto {
 	private int imgSlideNum;
 	private int commentCnt;
 	private int likeCnt;
+	private String profileImg;
 	
+	public String getProfileImg() {
+		return profileImg;
+	}
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
+	}
 	public int getLikeCnt() {
 		return likeCnt;
 	}
@@ -85,6 +92,7 @@ public class UserBoardDto {
 		return "UserBoardDto [articleNo=" + articleNo + ", userId=" + userId + ", subject=" + subject + ", content="
 				+ content + ", photoUrl=" + photoUrl + ", hit=" + hit + ", registerTime=" + registerTime
 				+ ", imgsIsExist=" + imgsIsExist + ", imgSlideNum=" + imgSlideNum + ", commentCnt=" + commentCnt
-				+ ", likeCnt=" + likeCnt + "]";
+				+ ", likeCnt=" + likeCnt + ", profileImg=" + profileImg + "]";
 	}
+	
 }
