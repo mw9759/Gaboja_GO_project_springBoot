@@ -60,7 +60,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
 
 	@Override
 	public List<AttractionCommentDto> getComments(int contentId) throws Exception {
-		System.out.println("serv" + contentId);
 		return travelPlanMapper.getComments(contentId);
 	}
 
@@ -81,6 +80,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
 	
 	@Override
 	public boolean updateLike(Map<String, String> map) throws Exception {
+		System.out.println(map.get("like") + " " + map.get("contentId"));
 		return travelPlanMapper.updateLike(map);
 	}
 	

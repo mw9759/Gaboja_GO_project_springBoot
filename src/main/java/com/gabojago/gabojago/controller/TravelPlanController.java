@@ -110,6 +110,7 @@ public class TravelPlanController {
 	@ApiOperation(value = "댓글 작성", notes = "관광지에 대한 댓글을 작성한다.", response = String.class)
 	@PostMapping("/writeComment")
 	public ResponseEntity<?> writeComment(@RequestBody AttractionCommentDto comment) {
+		System.out.println("write : " + comment);
 		try {
 			if(travelPlanService.writeComment(comment)) {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -124,8 +125,9 @@ public class TravelPlanController {
 	
 	//댓글 삭제
 	@ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제한다.", response = String.class)
-	@PostMapping("/deleteComment")
-	public ResponseEntity<?> deleteComment(@PathVariable("contentId") int commentId) {
+	@DeleteMapping("/deleteComment/{commentId}")
+	public ResponseEntity<?> deleteComment(@PathVariable("commentId") int commentId) {
+		System.out.println("!!!" + commentId);
 		try {
 			if(travelPlanService.deleteComment(commentId)) {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);

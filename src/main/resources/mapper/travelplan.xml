@@ -67,14 +67,14 @@
 	<!-- 댓글 삭제 -->
 	<delete id="deleteComment" parameterType="int">
 		delete from Attraction_comment
-		where commentId = ${commentId}
+		where comment_id = ${commentId}
 	</delete>
 	
 	<!-- 댓글 수정 -->
 	<update id="modifyComment" parameterType="AttractionCommentDto">
-		update attracion_comment
+		update attraction_comment
 		set content = #{content}, is_modify = 1
-		where comment_id = ${commentIo}
+		where comment_id = ${commentId}
 	</update>
 	
 	<!-- 내가 좋아요 누른 게시글 정보 업데이트 -->
@@ -87,7 +87,7 @@
 	<!-- 좋아요 변동 후 게시글 좋아요 수 업데이트 -->
 	<update id="updateLike" parameterType="map">
 		update attraction_info
-		set like = #{like}
+		set like_cnt = #{like}
 		where content_id = #{contentId}
 	</update>
 	

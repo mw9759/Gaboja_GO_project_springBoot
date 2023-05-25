@@ -244,7 +244,6 @@ public class UserBoardController {
 	@ApiOperation(value = "댓글 삭제", notes = "게시글에 해당하는 댓글을 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping("/deleteComment")
 	public ResponseEntity<?> deleteComment(@RequestBody UserBoardCommentsDto comment) {
-		System.out.println("여긴오나");
 		try {
 			if(userBoardService.deleteComment(comment.getCommentNo())) {
 				userBoardService.updateCommentsCnt(comment.getArticleNo()); // 댓글 작성 게시글 조회수 감소.

@@ -24,6 +24,7 @@
 		<result column="distance" property="distance"/>
 		<result column="like" property="like"/>
 		<result column="commentNum" property="commentNum"/>
+		<result column="like_cnt" property="like"/>
 	</resultMap>
 	
 	<!-- 입력 ID에 해당하는 SALT값 가져오기 -->
@@ -33,6 +34,7 @@
 		where sido_code = #{sido}
 		and content_type_id = #{contentTypeId}
 		AND title LIKE CONCAT('%', #{keyword}, '%')
-		and attraction_info.content_id = attraction_description.content_id;
+		and attraction_info.content_id = attraction_description.content_id
+		order by like_cnt desc;
 	</select>
 </mapper>

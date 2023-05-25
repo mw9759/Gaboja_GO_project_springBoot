@@ -50,9 +50,9 @@ public class TripSearchController {
 		if(longitude == null || longitude == "") longitude="1";
 		
 		List<TripSearchDto> result = tripSearchService.tripList(sido, contentTypeId, keyword, sortType, Double.parseDouble(latitude), Double.parseDouble(longitude));
+		System.out.println(result);
 		
 		return new ResponseEntity<List<TripSearchDto>>(result, HttpStatus.OK);
 	}
-	
 	
 }
