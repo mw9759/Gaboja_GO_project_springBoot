@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.gabojago.gabojago.model.dto.AttractionCommentDto;
+
 @Mapper
 public interface TravelPlanMapper {
 	
@@ -14,5 +16,13 @@ public interface TravelPlanMapper {
 	void removePlan(Map<String, String> map) throws Exception;
 	void savePlan(Map<String, String> map) throws Exception;
 	String loadPlan(Map<String, String> map) throws Exception;
+	
+	// Comment
+	List<AttractionCommentDto> getComments(int contentId) throws Exception;
+	boolean writeComment(AttractionCommentDto comment) throws Exception;
+	boolean deleteComment(int commentId) throws Exception;
+	boolean modifyComment(AttractionCommentDto comment) throws Exception;
+	boolean updateLike(Map<String, String> map) throws Exception;
+	void myLike(Map<String, String> map) throws Exception;
 	
 }

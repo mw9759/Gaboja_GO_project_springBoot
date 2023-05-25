@@ -14,6 +14,8 @@
 		<result column="register_time" property="registerTime"/>
 		<result column="imgs_is_exist" property="imgsIsExist"/>
 		<result column="img_slide_num" property="imgSlideNum"/>
+		<result column="comments_cnt" property="commentCnt"/>
+		<result column="like_cnt" property="likeCnt"/>
 	</resultMap>
 	
 	<!-- 게시글 이미지들 담을 resultMap -->
@@ -22,9 +24,20 @@
 		<result column="img_blob" property="imgBlob"/>
 	</resultMap>
 	
+	<!-- 댓글을 담을 resultMap -->
+	<resultMap type="UserBoardCommentsDto" id="comments">
+		<result column="comment_no" property="commentNo"/>
+		<result column="article_no" property="articleNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="content" property="content"/>
+		<result column="register_time" property="registerTime"/>
+		<result column="profile_img" property="profileImg"/>
+		<result column="is_modify" property="isModify"/>
+	</resultMap>
+	
 	<!-- 모든 게시글 리스트 가져오기 -->
 	<select id="listArticle" resultMap="list">
-		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, b.imgs_is_exist
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, b.imgs_is_exist, b.like_cnt, b.comments_cnt
 		from boards b, members m
 		where b.user_id = m.user_id and b.type = 'U'
 		<if test="word != null and word != ''">
@@ -120,5 +133,50 @@
 					and ${key} = #{word}
 			</if>
 		</if>
+	</select>
+	
+	<!-- articleNo에 해당하는 댓글 가져오기 -->
+	<select id="getComments" parameterType="int" resultMap="comments">
+		select a.comment_no, a.article_no, a.user_id, a.content, a.register_time, a.is_modify, b.profile_img
+		from board_comments a, members b
+		where article_no = #{articleNo} and a.user_id = b.user_id
+		order by a.register_time desc
+	</select>
+	
+	<!-- 해당 게시글에 대한 댓글 작성하기 -->
+	<insert id="writeComment" parameterType="UserBoardCommentsDto">
+		insert into board_comments(article_no, user_id, content)
+		values (#{articleNo}, #{userId}, #{content})
+	</insert>
+	
+	<!-- 조회수 업데이트: 증감 -->
+	<update id="updateCommentsCnt" parameterType="int">
+		update boards
+		set comments_cnt = (select count(article_no)
+							from board_comments
+		                    where article_no = #{articleNo})
+		where article_no = #{articleNo};
+	</update>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteComment" parameterType="int">
+		delete from board_comments
+		where comment_no = ${commentNo}
+	</delete>
+	
+	<!-- 댓글 수정 -->
+	<update id="modifyComment" parameterType="UserBoardCommentsDto">
+		update board_comments
+		set content = #{content}, is_modify = 1
+		where comment_no = ${commentNo}
+	</update>
+	
+	<!-- 조회수 TOP3 -->
+	<select id="listTop3" resultMap="list">
+		select *
+		from boards
+		where type = "U"
+		order by hit desc
+		limit 3
 	</select>
 </mapper>

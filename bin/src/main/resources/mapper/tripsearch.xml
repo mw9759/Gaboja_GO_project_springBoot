@@ -22,16 +22,17 @@
 		<result column="mlevel" property="mlevel"/>
 		<result column="overview" property="overview"/>
 		<result column="distance" property="distance"/>
+		<result column="like" property="like"/>
+		<result column="commentNum" property="commentNum"/>
 	</resultMap>
 	
 	<!-- 입력 ID에 해당하는 SALT값 가져오기 -->
 	<select id="tripList" parameterType="hashMap" resultMap="tripSearch">
-		select *
+		select *, (select count(*) from attraction_comment where attraction_comment.content_id = attraction_info.content_id) as commentNum
 		from attraction_info, attraction_description
 		where sido_code = #{sido}
 		and content_type_id = #{contentTypeId}
 		AND title LIKE CONCAT('%', #{keyword}, '%')
-		and attraction_info.content_id = attraction_description.content_id
-		order by title limit 20;
+		and attraction_info.content_id = attraction_description.content_id;
 	</select>
 </mapper>

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.gabojago.gabojago.model.dto.AttractionCommentDto;
 import com.gabojago.gabojago.model.dto.TravelPlanDto;
 import com.gabojago.gabojago.model.mapper.TravelPlanMapper;
 
@@ -56,4 +57,36 @@ public class TravelPlanServiceImpl implements TravelPlanService {
 		map.put("planName", travelPlanDto.getPlanName());
 		return travelPlanMapper.loadPlan(map);
 	}
+
+	@Override
+	public List<AttractionCommentDto> getComments(int contentId) throws Exception {
+		System.out.println("serv" + contentId);
+		return travelPlanMapper.getComments(contentId);
+	}
+
+	@Override
+	public boolean writeComment(AttractionCommentDto comment) throws Exception {
+		return travelPlanMapper.writeComment(comment);
+	}
+
+	@Override
+	public boolean deleteComment(int commentId) throws Exception {
+		return travelPlanMapper.deleteComment(commentId);
+	}
+
+	@Override
+	public boolean modifyComment(AttractionCommentDto comment) throws Exception {
+		return travelPlanMapper.modifyComment(comment);
+	}
+	
+	@Override
+	public boolean updateLike(Map<String, String> map) throws Exception {
+		return travelPlanMapper.updateLike(map);
+	}
+	
+	@Override
+	public void myLike(Map<String, String> map) throws Exception {
+		travelPlanMapper.myLike(map);
+	}
+
 }

@@ -3,24 +3,38 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.gabojago.gabojago.model.mapper.TravelPlanMapper">
+	<!-- 댓글 resultMap -->
+	<resultMap type="AttractionCommentDto" id="comment">
+		<result column="comment_id" property="commentId"/>
+		<result column="content_id" property="contentId"/>
+		<result column="user_id" property="userId"/>
+		<result column="content" property="content"/>
+		<result column="register_time" property="registerTime"/>
+		<result column="profile_img" property="profileImg"/>
+		<result column="is_modify" property="isModify"/>
+	</resultMap>
 
+	<!-- 여행계획 조회 -->
 	<select id="planList" parameterType="String" resultType="String">
 		select plan_name
 		from plan
 		where user_id = #{userId}
 	</select>
 	
+	<!-- 여행계획 생성 -->
 	<insert id="createPlan" parameterType="map">
 		insert into plan(user_id, plan_name, content)
 		values(#{userId}, #{planName}, "")
 	</insert>
 	
+	<!-- 여행계획 제거 -->
 	<delete id="removePlan" parameterType="map">
 		delete from plan
 		where user_id = #{userId}
 		and plan_name = #{planName}
 	</delete>
 	
+	<!-- 여행계획 수정 -->
 	<update id="savePlan" parameterType="map">
 		update plan
 		set content = #{content}
@@ -28,11 +42,53 @@
 		and plan_name = #{planName}
 	</update>
 	
+	<!-- 여행계획 상세조회 -->
 	<select id="loadPlan" parameterType="map" resultType="String">
 		select content
 		from plan
 		where user_id = #{userId}
 		and plan_name = #{planName}
 	</select>
+	
+	<!-- 댓글 조회 -->
+	<select id="getComments" parameterType="int" resultMap="comment">
+		select a.comment_id, a.content_id, a.user_id, a.content, a.register_time, a.is_modify, b.profile_img
+		from attraction_comment a, members b
+		where a.content_id = #{contentId} and a.user_id = b.user_id
+		order by a.register_time desc
+	</select>
+	
+	<!-- 댓글 작성 -->
+	<insert id="writeComment" parameterType="AttractionCommentDto">
+		insert into attraction_comment(content_id, user_id, content)
+		values (#{contentId}, #{userId}, #{content})
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteComment" parameterType="int">
+		delete from Attraction_comment
+		where commentId = ${commentId}
+	</delete>
+	
+	<!-- 댓글 수정 -->
+	<update id="modifyComment" parameterType="AttractionCommentDto">
+		update attracion_comment
+		set content = #{content}, is_modify = 1
+		where comment_id = ${commentIo}
+	</update>
+	
+	<!-- 내가 좋아요 누른 게시글 정보 업데이트 -->
+	<update id="myLike" parameterType="map">
+		update members
+		set like_attractions = #{likeAttractions}
+		where user_id = #{userId}
+	</update>
+	
+	<!-- 좋아요 변동 후 게시글 좋아요 수 업데이트 -->
+	<update id="updateLike" parameterType="map">
+		update attraction_info
+		set like = #{like}
+		where content_id = #{contentId}
+	</update>
 	
 </mapper>
